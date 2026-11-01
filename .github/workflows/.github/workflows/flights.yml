@@ -1,0 +1,48 @@
+name: CMH flight deals
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"   # every 6 hours (about 120 SerpApi calls/month)
+  workflow_dispatch:         # lets you run it manually
+
+permissions:
+  contents: write            # needed to save seen.json
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Find deals and push
+        env:
+          # Secrets (Settings > Secrets and variables > Actions)
+          TRAVELPAYOUTS_TOKEN: ${{ secrets.TRAVELPAYOUTS_TOKEN }}
+          SERPAPI_KEY: ${{ secrets.SERPAPI_KEY }}
+          NTFY_TOPIC: ${{ secrets.NTFY_TOPIC }}
+          # Optional: separate topics so you can mute one category
+          # NTFY_TOPIC_DOMESTIC: ${{ secrets.NTFY_TOPIC_DOMESTIC }}
+          # NTFY_TOPIC_INTERNATIONAL: ${{ secrets.NTFY_TOPIC_INTERNATIONAL }}
+          # Error-fare / fire-sale blogs (no key needed)
+          # NTFY_TOPIC_DEALS: ${{ secrets.NTFY_TOPIC_DEALS }}
+          # DEAL_KEYWORDS: "Columbus,CMH,Cleveland,Cincinnati,Detroit,Pittsburgh"
+          # Points value in cents per point (Sapphire Preferred 1.25, Amex MR 1.0)
+          # CPP_CHASE: "1.25"
+          # CPP_AMEX: "1.0"
+          # Points-blog feeds and words for card offers (defaults are built in)
+          # CARD_FEEDS: "https://upgradedpoints.com/feed/"
+          # Tweak these
+          MAX_PRICE_DOMESTIC: "150"
+          MAX_PRICE_INTERNATIONAL: "500"
+          # DIRECT_ONLY: "true"
+          # ONE_WAY: "true"
+          # EXCLUDE: "Las Vegas,Orlando"
+        run: python flight_alerts.py
+      - name: Save state
+        run: |
+          git config user.name "flight-bot"
+          git config user.email "flight-bot@users.noreply.github.com"
+          git add seen.json docs/deals.json
+          git diff --staged --quiet || (git commit -m "Update seen prices" && git push)
