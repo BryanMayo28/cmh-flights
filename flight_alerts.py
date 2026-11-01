@@ -14,6 +14,7 @@ and add it to PROVIDERS.
 import json
 import os
 import sys
+import time
 import urllib.error
 import urllib.parse
 import re
@@ -109,6 +110,7 @@ def aviasales():
             "airline": d.get("airline", ""), "dates": dates, "source": "Aviasales",
             "link": ("https://www.aviasales.com" + d["link"]) if d.get("link") else None,
             "domestic": (cc == "US") if cc else None,
+            "code": code, "dep": (d.get("departure_at") or "")[:10], "ret": (d.get("return_at") or "")[:10],
         })
     return deals
 
@@ -162,6 +164,47 @@ def collect():
             if k not in best or price < best[k]["price"]:
                 best[k] = {**d, "bucket": bucket}
     return best
+
+
+CAL_TOP = int(os.environ.get("CAL_TOP", "8"))        # destinations per tab that get a price calendar
+CAL_MONTHS = int(os.environ.get("CAL_MONTHS", "3"))  # how many months ahead the calendar covers
+
+
+def build_calendars(best):
+    """For the cheapest destinations, fetch the cheapest fare for every departure day (Aviasales only)."""
+    token = os.environ.get("TRAVELPAYOUTS_TOKEN")
+    if not token:
+        return
+    today = datetime.now(timezone.utc).date().replace(day=1)
+    months = []
+    for i in range(CAL_MONTHS):
+        y, m = divmod(today.month - 1 + i, 12)
+        months.append(f"{today.year + y}-{m + 1:02d}")
+    for bucket in ("domestic", "international"):
+        top = sorted((d for d in best.values() if d["bucket"] == bucket and d.get("code")), key=lambda d: d["price"])[:CAL_TOP]
+        for d in top:
+            days = {}
+            for month in months:
+                params = {
+                    "origin": ORIGIN, "destination": d["code"], "departure_at": month,
+                    "one_way": str(ONE_WAY).lower(), "direct": str(DIRECT_ONLY).lower(), "unique": "false",
+                    "sorting": "price", "currency": "usd", "limit": 1000, "token": token,
+                }
+                try:
+                    body = get_json("https://api.travelpayouts.com/aviasales/v3/prices_for_dates?" + urllib.parse.urlencode(params))
+                except Exception as e:
+                    print(f"calendar {d['code']} {month} failed: {e}", file=sys.stderr)
+                    continue
+                for t in body.get("data", []) if body.get("success") else []:
+                    dep = (t.get("departure_at") or "")[:10]
+                    if not dep or (t.get("transfers") or 0) > MAX_STOPS:
+                        continue
+                    if dep not in days or t["price"] < days[dep][2]:
+                        days[dep] = [dep, (t.get("return_at") or "")[:10], t["price"], t.get("transfers") or 0,
+                                     t.get("link") or ""]
+                time.sleep(0.2)
+            d["cal"] = sorted(days.values())
+            print(f"calendar {d['name']}: {len(days)} days")
 
 
 def points(price):
@@ -244,7 +287,8 @@ def write_site(best, posts):
     deals = [{
         "key": k, "bucket": d["bucket"], "name": d["name"], "price": d["price"], "prev": d.get("prev"),
         "stops": d.get("stops") or 0, "airline": d.get("airline", ""), "dates": d.get("dates", ""),
-        "source": d["source"], "link": d.get("link"), "ur": points(d["price"])[0], "mr": points(d["price"])[1], "hist": (hist.get(k, []) + [d["price"]])[-30:],
+        "source": d["source"], "link": d.get("link"), "code": d.get("code"), "dep": d.get("dep", ""), "ret": d.get("ret", ""),
+        "cal": d.get("cal", []), "ur": points(d["price"])[0], "mr": points(d["price"])[1], "hist": (hist.get(k, []) + [d["price"]])[-30:],
     } for k, d in best.items()]
     deals.sort(key=lambda x: x["price"])
     keep = now - timedelta(days=14)
@@ -303,6 +347,10 @@ def main():
     seen = {k: v for k, v in seen.items() if not k.startswith("deal|")}
     seen.update({k: 1 for k in posts})
 
+    try:
+        build_calendars(best)
+    except Exception as e:  # the calendar is a bonus; never let it break alerts
+        print(f"calendars failed: {e}", file=sys.stderr)
     write_site(best, posts)
     if not PUSH_FAILS:  # if a push failed, don't mark fares as seen, so they alert again next run
         STATE.write_text(json.dumps(seen, indent=2, sort_keys=True))
