@@ -11,6 +11,7 @@ Sources (each is optional, enabled by its key):
 To add a source: write a function that returns a list of deals (see below)
 and add it to PROVIDERS.
 """
+import base64
 import html
 import json
 import os
@@ -243,6 +244,38 @@ def build_calendars(best):
                         days[dep] = [dep, (t.get("return_at") or "")[:10], total, t.get("transfers") or 0,
                                      t.get("link") or ""]
                 time.sleep(0.2)
+                extra = d.get("extra", 0)
+
+                def add(dep, ret, price, stops):
+                    if not dep or price is None or (stops or 0) > MAX_STOPS:
+                        return
+                    total = price + extra
+                    if dep not in days or total < days[dep][2]:
+                        link = f"/search/{d.get('origin', ORIGIN)}{dep[8:10]}{dep[5:7]}{d['code']}" + (
+                            f"{ret[8:10]}{ret[5:7]}" if ret else "") + "1"
+                        days[dep] = [dep, ret or "", total, stops or 0, link]
+                for url in (
+                    "https://api.travelpayouts.com/v2/prices/month-matrix?" + urllib.parse.urlencode({
+                        "origin": d.get("origin", ORIGIN), "destination": d["code"], "month": month + "-01",
+                        "currency": "usd", "show_to_affiliates": "true", "token": token}),
+                    "https://api.travelpayouts.com/v1/prices/calendar?" + urllib.parse.urlencode({
+                        "origin": d.get("origin", ORIGIN), "destination": d["code"], "depart_date": month,
+                        "calendar_type": "departure_date", "currency": "usd", "token": token}),
+                ):
+                    try:
+                        body = get_json(url)
+                    except Exception as e:
+                        print(f"calendar extra {d['code']} {month} failed: {e}", file=sys.stderr)
+                        continue
+                    data = body.get("data") or []
+                    rows = data.values() if isinstance(data, dict) else data
+                    for t in rows:
+                        if not isinstance(t, dict):
+                            continue
+                        add((t.get("depart_date") or t.get("departure_at") or "")[:10],
+                            (t.get("return_date") or t.get("return_at") or "")[:10],
+                            t.get("value", t.get("price")), t.get("number_of_changes", t.get("transfers")))
+                    time.sleep(0.2)
             d["cal"] = sorted(days.values())
             print(f"calendar {d['name']}: {len(days)} days")
 
@@ -326,14 +359,25 @@ def fetch_deal_posts(feeds=None, match=None, kind="deal"):
     return posts
 
 
+def hdr(value):
+    """HTTP headers must be plain text; encode anything else the way ntfy understands (RFC 2047)."""
+    value = str(value).translate({0x2013: "-", 0x2014: "-", 0x2018: "'", 0x2019: "'", 0x201c: '"', 0x201d: '"',
+                                  0x2026: "...", 0xa0: " "})
+    try:
+        value.encode("ascii")
+        return value
+    except UnicodeEncodeError:
+        return "=?UTF-8?B?" + base64.b64encode(value.encode("utf-8")).decode("ascii") + "?="
+
+
 def push(bucket, title, message, click=None):
     """Send one phone alert. If ntfy rejects the tap-link, retry without it; log why on failure."""
     tags = {"domestic": "us", "international": "earth_americas", "deals": "fire"}
     topic = TOPICS[bucket].strip()
     for use_click in ([True, False] if click else [False]):
-        headers = {"Title": title, "Tags": tags[bucket]}
+        headers = {"Title": hdr(title), "Tags": tags[bucket]}
         if use_click:
-            headers["Click"] = click
+            headers["Click"] = urllib.parse.quote(click, safe=":/?#[]@!$&'()*+,;=%~")
         req = urllib.request.Request(f"{NTFY_SERVER}/{topic}", data=message.encode("utf-8"), headers=headers)
         try:
             urllib.request.urlopen(req, timeout=30).read()
