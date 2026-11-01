@@ -14,6 +14,7 @@ and add it to PROVIDERS.
 import json
 import os
 import sys
+import urllib.error
 import urllib.parse
 import re
 import urllib.request
@@ -62,6 +63,7 @@ CARD_KEYWORDS = [k.strip() for k in os.environ.get("CARD_KEYWORDS",
     "Amex Travel,Amex Platinum,Platinum Card,Amex Gold,Gold Card,Chase Travel,Points Boost,Sapphire,Freedom,Ultimate Rewards,Membership Rewards").split(",") if k.strip()]
 CARD_FLIGHT_WORDS = ["flight", "flights", "airfare", "airfares", "airline", "airlines", "fare", "fares", "Delta", "United", "Southwest", "JetBlue", "Points Boost"]
 STATUS = {"ok": 0, "fail": 0}
+PUSH_FAILS = []
 
 US_NAMES = {"united states", "united states of america", "usa", "us"}
 STATE = Path(__file__).with_name("seen.json")
@@ -210,12 +212,24 @@ def fetch_deal_posts(feeds=None, match=None, kind="deal"):
 
 
 def push(bucket, title, message, click=None):
+    """Send one phone alert. If ntfy rejects the tap-link, retry without it; log why on failure."""
     tags = {"domestic": "us", "international": "earth_americas", "deals": "fire"}
-    headers = {"Title": title, "Tags": tags[bucket]}
-    if click:
-        headers["Click"] = click
-    req = urllib.request.Request(f"{NTFY_SERVER}/{TOPICS[bucket]}", data=message.encode("utf-8"), headers=headers)
-    urllib.request.urlopen(req, timeout=30).read()
+    topic = TOPICS[bucket].strip()
+    for use_click in ([True, False] if click else [False]):
+        headers = {"Title": title, "Tags": tags[bucket]}
+        if use_click:
+            headers["Click"] = click
+        req = urllib.request.Request(f"{NTFY_SERVER}/{topic}", data=message.encode("utf-8"), headers=headers)
+        try:
+            urllib.request.urlopen(req, timeout=30).read()
+            return True
+        except urllib.error.HTTPError as e:
+            print(f"ntfy rejected the alert (HTTP {e.code}): {e.read().decode('utf-8', 'replace')[:300]}", file=sys.stderr)
+        except Exception as e:
+            print(f"ntfy push failed: {e}", file=sys.stderr)
+            break
+    PUSH_FAILS.append(title)
+    return False
 
 
 def write_site(best, posts):
@@ -290,8 +304,11 @@ def main():
     seen.update({k: 1 for k in posts})
 
     write_site(best, posts)
-    STATE.write_text(json.dumps(seen, indent=2, sort_keys=True))
+    if not PUSH_FAILS:  # if a push failed, don't mark fares as seen, so they alert again next run
+        STATE.write_text(json.dumps(seen, indent=2, sort_keys=True))
     print(f"{sent} pushed (domestic {len(alerts['domestic'])}, international {len(alerts['international'])} qualified)")
+    if PUSH_FAILS:
+        sys.exit(f"{len(PUSH_FAILS)} alert(s) could not be sent. See the ntfy messages above.")
     if STATUS["fail"] and not STATUS["ok"]:
         sys.exit("All sources failed.")
 
