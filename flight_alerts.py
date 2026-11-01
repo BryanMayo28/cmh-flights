@@ -138,6 +138,7 @@ def aviasales():
                 "link": ("https://www.aviasales.com" + d["link"]) if d.get("link") else None,
                 "domestic": (cc == "US") if cc else None,
                 "code": code, "dep": (d.get("departure_at") or "")[:10], "ret": (d.get("return_at") or "")[:10],
+                "cc": cc or "",
             })
         time.sleep(0.3)
     if not deals and errs:
@@ -424,7 +425,7 @@ def write_site(best, posts):
         "stops": d.get("stops") or 0, "airline": d.get("airline", ""), "dates": d.get("dates", ""),
         "source": d["source"], "link": d.get("link"), "code": d.get("code"), "dep": d.get("dep", ""), "ret": d.get("ret", ""),
         "origin": d.get("origin", ORIGIN), "extra": d.get("extra", 0), "fare": d.get("fare", d["price"]), "dur": d.get("dur"),
-        "alts": d.get("alts", []), "watch": d.get("watch"),
+        "alts": d.get("alts", []), "watch": d.get("watch"), "cc": d.get("cc", ""),
         "cal": d.get("cal", []), "ur": points(d.get("fare", d["price"]))[0], "mr": points(d.get("fare", d["price"]))[1], "hist": (hist.get(k, []) + [d["price"]])[-30:],
     } for k, d in best.items()]
     deals.sort(key=lambda x: x["price"])
