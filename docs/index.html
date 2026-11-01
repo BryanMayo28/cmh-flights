@@ -152,6 +152,9 @@ input[type=range]{width:100%;accent-color:var(--ac)}
 .dbar .big{font-size:26px;font-weight:700;letter-spacing:-.6px;line-height:1}
 .dbar .dts{font-size:13.5px;color:var(--mu);margin-top:5px}
 .dbar .note{font-size:13px;color:var(--mu);text-align:right;max-width:52%}
+.live{font-size:13.5px;margin:-2px 0 10px;padding:10px 12px;border-radius:12px;background:var(--acs);color:var(--tx)}
+.live .lr{display:flex;justify-content:space-between;gap:8px;align-items:baseline}.live .lr b{font-size:18px}.live .ls{color:var(--mu);margin-top:3px}
+.step div{cursor:pointer}
 /* trips */
 .tc{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;background:var(--card);border:1px solid var(--ln);border-radius:20px;padding:18px 16px;margin-bottom:16px}
 .tc>*{min-width:0}.row .scroll{flex:none}
@@ -206,7 +209,8 @@ summary:after{content:"+";color:var(--mu);font-size:20px;line-height:1}details[o
 <div class="scr" id="det"></div>
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)],AV='https://www.aviasales.com';
-const AP={CMH:['Columbus',0],CVG:['Cincinnati',1.75],CLE:['Cleveland',2.25],DAY:['Dayton',1.2],DTW:['Detroit',3.25],PIT:['Pittsburgh',3],IND:['Indianapolis',3]};
+const AP={CMH:['Columbus',0],DAY:['Dayton',1.2],CVG:['Cincinnati',1.75],CLE:['Cleveland',2.25]};
+const ORIG=Object.keys(AP);
 const st={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
 let cfg=Object.assign({ur:1.25,mr:1.0,urb:0,mrb:0,prog:'ur',pm:false},st.get('cfg2',{}));
 const S={tab:st.get('tab2','flights'),b:st.get('b','domestic'),sort:'cheap',nd:false,wk:false,from:'',to:'',l1:'',l2:'',bg:null,mo:'',hub:st.get('hub','all')};
@@ -257,14 +261,15 @@ const ccOf=d=>d.cc||(d.bucket==='domestic'?'US':'');
 
 /* ---------- data ---------- */
 function base(d){
-  if(S.hub!=='cmh'||d.origin===D.origin)return d;
-  const a=(d.alts||[]).find(x=>x.o===D.origin);if(!a)return null;
-  return {...d,origin:a.o,extra:0,price:a.price,fare:a.fare,dep:a.dep,ret:a.ret,link:a.link,stops:a.stops,dur:a.dur,airline:a.airline||d.airline,cal:[],hist:[],prev:null};
+  const ok=S.hub==='cmh'?[D.origin]:ORIG;
+  if(ok.includes(d.origin||D.origin))return d;
+  const a=(d.alts||[]).filter(x=>ok.includes(x.o)).sort((x,y)=>x.price-y.price)[0];if(!a)return null;
+  return {...d,origin:a.o,extra:a.price-a.fare,price:a.price,fare:a.fare,dep:a.dep,ret:a.ret,link:a.link,stops:a.stops,dur:a.dur,airline:a.airline||d.airline,cal:[],hist:[],prev:null};
 }
 function entries(d){
   const o=[],m=(d.dates||'').match(/(\d{4}-\d\d-\d\d)(?: to (\d{4}-\d\d-\d\d))?/),dep=d.dep||(m&&m[1])||'',ret=d.ret||(m&&m[2])||'';
   if(d.price!=null)o.push({dep,ret,price:d.price,stops:d.stops,link:d.link,dur:d.dur,o:d.origin,fare:d.fare});
-  for(const c of d.cal||[])if(c[1])o.push({dep:c[0],ret:c[1],price:c[2],stops:c[3],link:c[4]?(/^https?:/.test(c[4])?c[4]:AV+c[4]):'',o:c[5]||d.origin,fare:c[6]});
+  for(const c of d.cal||[])if(c[1]&&(!c[5]||AP[c[5]]))o.push({dep:c[0],ret:c[1],price:c[2],stops:c[3],link:c[4]?(/^https?:/.test(c[4])?c[4]:AV+c[4]):'',o:c[5]||d.origin,fare:c[6]});
   return o.filter(e=>!e.dep||e.dep>=today);
 }
 const dateF=()=>S.from||S.to||S.l1||S.l2||S.wk||S.mo;
@@ -355,7 +360,7 @@ function filtersSheet(){
 <div class="sec"><h4>Trip length</h4><div class="two"><div class="fld"><label>At least</label><select id="fL1">${ln.map(n=>`<option value="${n}"${String(S.l1)===String(n)?' selected':''}>${n?n+' nights':'Any'}</option>`).join('')}</select></div><div class="fld"><label>At most</label><select id="fL2">${ln.map(n=>`<option value="${n}"${String(S.l2)===String(n)?' selected':''}>${n?n+' nights':'Any'}</option>`).join('')}</select></div></div></div>
 <div class="sec"><h4>Max price</h4><div class="row"><div class="lbl" id="bgL">${S.bg>=S.mx?'No limit':'Up to '+money(S.bg)}</div></div><input type="range" id="fBg" min="50" max="${S.mx}" step="10" value="${S.bg}"></div>
 <div class="sec"><div class="row"><div class="lbl">Nonstop only</div>${sw('fNd',S.nd)}</div>
-<div class="row" style="margin-top:14px"><div><div class="lbl">Nearby airports</div><div class="hint">CVG, CLE, DAY, DTW, PIT, IND · drive cost included</div></div>${sw('fHub',S.hub==='all')}</div></div>
+<div class="row" style="margin-top:14px"><div><div class="lbl">Nearby airports</div><div class="hint">Dayton, Cincinnati and Cleveland, drive cost included</div></div>${sw('fHub',S.hub==='all')}</div></div>
 <div class="btns"><button class="btn g" data-act="reset">Reset</button><button class="btn" data-act="close" id="showN">Show results</button></div>`);
   countN();
 }
@@ -373,12 +378,15 @@ function settingsSheet(){
 }
 /* ---------- destination screen ---------- */
 let C=null;
-function openDetail(k,push=true){
+function openDetail(k,push=true,keep=null){
   const d=typeof k==='object'?k:D.deals.find(x=>x.key===k);if(!d)return;k=d.key;
   const map={};for(const e of entries(d))if(e.dep&&(!map[e.dep]||e.price<map[e.dep].price))map[e.dep]=e;
+  const pairs={};for(const p of d.pairs||[]){if(p[0]<today||!AP[p[4]])continue;const x={dep:p[0],ret:p[1],price:p[2],stops:p[3],o:p[4],fare:p[5]};(pairs[x.dep]=pairs[x.dep]||[]).push(x);
+    if(!map[x.dep]||x.price<map[x.dep].price)map[x.dep]={...x,link:''}}
   const norm=x=>x.ret&&dd(x.dep,x.ret)>=2&&dd(x.dep,x.ret)<=16;
   const best=entries(d).filter(ok).filter(norm).sort((a,b)=>a.price-b.price)[0]||entries(d).filter(ok).sort((a,b)=>a.price-b.price)[0]||Object.values(map).sort((a,b)=>a.price-b.price)[0];
-  C={d,map,dep:best?best.dep:'',ret:best?best.ret:''};
+  C={d,map,pairs,mode:'dep',dep:best?best.dep:'',ret:best?best.ret:'',live:null};
+  if(keep)Object.assign(C,keep);
   const ps=Object.values(map).map(e=>e.price),lo=ps.length?Math.min(...ps):null,hi=ps.length?Math.max(...ps):null;C.thr=ps.length?lo+(hi-lo)*.25:0;C.lo=lo;
   const keys=Object.keys(map).sort(),t=new Date(),last=keys.length?dt(keys[keys.length-1]):t;
   const nM=Math.max(6,(last.getFullYear()-t.getFullYear())*12+last.getMonth()-t.getMonth()+1);
@@ -389,13 +397,13 @@ function openDetail(k,push=true){
       g+=`<button class="day${e&&e.price<=C.thr?' c':''}" data-day="${key}"${key<today?' disabled':''}><span class="n">${j}</span><span class="p">${e?'$'+Math.round(e.price):''}</span></button>`}
     g+='</div>'}
   const h=d.hist||[],sv=saved.has(d.key);
-  const aps=(d.alts||[]).map(a=>`<div class="ap"><span>${apName(a.o)} <small>${a.o}${AP[a.o]&&AP[a.o][1]?' · '+AP[a.o][1]+'h drive':''}</small></span><span><b>${money(a.price)}</b>${a.price!==a.fare?` <small>(${money(a.fare)} fare)</small>`:''}</span></div>`).join('');
+  const aps=(d.alts||[]).filter(a=>AP[a.o]).map(a=>`<div class="ap"><span>${apName(a.o)} <small>${a.o}${AP[a.o]&&AP[a.o][1]?' · '+AP[a.o][1]+'h drive':''}</small></span><span><b>${money(a.price)}</b>${a.price!==a.fare?` <small>(${money(a.fare)} fare)</small>`:''}</span></div>`).join('');
   $('#det').innerHTML=`<div class="dtop"><button class="ib back" data-act="back" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><div class="dtitle">${esc(d.name)}</div>
 ${d.search?'<span style="width:40px"></span>':`<button class="ib" data-act="star" aria-label="Save" style="color:${sv?'#f59e0b':'inherit'}">${sv?'★':'☆'}</button>`}</div>
-<div class="dsc"><div class="dhero">${ph(d.name,ccOf(d))}<div class="in"><h2>${esc(d.name)}</h2><p>${d.search?`Searched from Columbus and 6 nearby airports${d.country?', '+esc(d.country):''}`:`Round trip from ${apName(d.origin)}${d.airline?', '+esc(d.airline):''}${d.dur?', '+hm(d.dur)+' flight':''}`}</p>
+<div class="dsc"><div class="dhero">${ph(d.name,ccOf(d))}<div class="in"><h2>${esc(d.name)}</h2><p>${d.search?`Searched from Columbus, Dayton, Cincinnati and Cleveland${d.country?', '+esc(d.country):''}`:`Round trip from ${apName(d.origin)}${d.airline?', '+esc(d.airline):''}${d.dur?', '+hm(d.dur)+' flight':''}`}</p>
 <div class="from">${d.loading?'<span class="spin"></span>Finding the best prices…':lo!=null?`Lowest saved fare<b>${money(lo)}</b>${d.search&&d.best&&d.best.o!==D.origin?' from '+d.best.o:''}`:(d.err?esc(d.err):'No saved fares yet. Pick dates to check live prices.')}</div></div></div>
-<div class="dbody"><div class="box"><h3>Pick your dates</h3><div class="bs">Tap a day to leave, then a day to return. Each price is the cheapest saved round trip leaving that day.</div>
-<div class="step"><div id="sDep"><small>Leave</small><b>—</b></div><div id="sRet"><small>Return</small><b>—</b></div></div>
+<div class="dbody"><div class="box"><h3>Pick your dates</h3><div class="bs" id="calHint"></div>
+<div class="step"><div id="sDep" data-act="mDep"><small>Leave</small><b>—</b></div><div id="sRet" data-act="mRet"><small>Return</small><b>—</b></div></div>
 <div class="dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>${g}
 <div class="legend"><span><i style="background:var(--gn)"></i>Green price: cheapest days</span><span><i style="background:var(--gn)"></i>Dot under a date: best-known return</span></div></div>
 <div class="box"><h3>Compare live prices</h3><div class="bs">Saved fares can be a few days old. Check your exact dates on:</div><div id="cmp"></div></div>
@@ -403,39 +411,80 @@ ${(d.alts||[]).length>1?`<div class="box"><h3>By airport</h3><div class="bs">Bes
 ${h.length>1?`<div class="box"><h3>Price history</h3><div class="bs">Low ${money(Math.min(...h))}, high ${money(Math.max(...h))} over ${h.length} checks.</div>${spark(h)}</div>`:''}
 </div></div><div class="dbar"><div class="in" id="dbar"></div></div>`;
   paint();hydrate($('#det'));$('#det').classList.add('open');
+  if(API&&d.code&&!d.search&&!d.fetched&&!d.fetching){d.fetching=true;const kk=d.key;$('#calHint').insertAdjacentHTML('afterend','<div class="bs" id="upd"><span class="spin"></span>Loading prices for every date…</div>');
+    fetch(`${API}/search?dest=${encodeURIComponent(d.code)}&origins=${ORIG.join(',')}`).then(r=>r.json()).then(j=>{d.fetching=false;if(j.error||!C||C.d.key!==kk)return;
+      const byDep={};for(const c of d.cal||[])byDep[c[0]]=c;for(const c of (j.cal||[]).filter(c=>c[1]))if(!byDep[c[0]]||c[2]<byDep[c[0]][2])byDep[c[0]]=c;
+      const ao={};for(const a of [...(d.alts||[]),...(j.alts||[])])if(!ao[a.o]||a.price<ao[a.o].price)ao[a.o]=a;
+      const m={...d,fetched:true,cal:Object.values(byDep).sort((a,b)=>a[0]<b[0]?-1:1),pairs:j.pairs||[],alts:Object.values(ao).sort((a,b)=>a.price-b.price)};
+      const i=D.deals.indexOf(d);if(i>=0)D.deals[i]=m;const sc=$('#det .dsc').scrollTop;
+      openDetail(m,false,{dep:C.dep,ret:C.ret,mode:C.mode});$('#det .dsc').scrollTop=sc})
+    .catch(()=>{d.fetching=false;const u=$('#upd');if(u)u.remove()})}
   const sc=$('#det .dsc'),tb=$('#det .dtop');sc.onscroll=()=>tb.classList.toggle('solid',sc.scrollTop>Math.max(120,$('#det .dhero').offsetHeight-80));
   if(push)try{history.pushState({d:k},'','#'+encodeURIComponent(k))}catch(e){}
   setTimeout(()=>{const s=$(`#det [data-day="${C.dep}"]`);if(s)s.scrollIntoView({block:'center'})},80);
 }
 const spark=h=>{const a=Math.min(...h),b=Math.max(...h),r=b-a||1;return `<svg viewBox="0 0 300 60" width="100%" height="60" preserveAspectRatio="none"><polyline points="${h.map((v,i)=>`${(i*300/(h.length-1)).toFixed(1)},${(54-(v-a)/r*48).toFixed(1)}`).join(' ')}" fill="none" stroke="var(--ac)" stroke-width="2.5" stroke-linejoin="round" vector-effect="non-scaling-stroke"/></svg>`};
+function dayPrices(){
+  const {map,pairs,mode,dep}=C,out={};
+  if(mode==='ret'&&dep){for(const p of pairs[dep]||[])if(!out[p.ret]||p.price<out[p.ret])out[p.ret]=p.price;const e=map[dep];if(e&&e.ret&&!out[e.ret])out[e.ret]=e.price}
+  else for(const k in map)out[k]=map[k].price;
+  return out;
+}
+function exactFare(dep,ret){
+  const p=(C.pairs[dep]||[]).filter(x=>x.ret===ret).sort((a,b)=>a.price-b.price)[0],e=C.map[dep];
+  if(e&&e.ret===ret&&(!p||e.price<=p.price))return e;return p||null;
+}
 function paint(){
-  const {d,map,dep,ret}=C,e=dep&&map[dep],sug=dep&&!ret&&e&&e.ret;
-  $$('#det .day').forEach(b=>{const k=b.dataset.day;b.classList.toggle('dep',k===dep);b.classList.toggle('ret',!!ret&&k===ret);b.classList.toggle('r1',!!ret);b.classList.toggle('in',!!ret&&k>dep&&k<ret);b.classList.toggle('sug',!!sug&&k===sug)});
-  $('#sDep').classList.toggle('on',!dep||!!ret);$('#sRet').classList.toggle('on',!!dep&&!ret);
+  const {d,map,dep,ret,mode}=C,e=dep&&map[dep],sug=dep&&!ret&&e&&e.ret;
+  const P=dayPrices(),vals=Object.values(P),lo=vals.length?Math.min(...vals):0,hi=vals.length?Math.max(...vals):0,thr=lo+(hi-lo)*.25;
+  $$('#det .day').forEach(b=>{const k=b.dataset.day,v=P[k];b.querySelector('.p').textContent=v!=null?'$'+Math.round(v):'';
+    b.classList.toggle('c',v!=null&&hi>lo&&v<=thr);b.classList.toggle('dep',k===dep);b.classList.toggle('ret',!!ret&&k===ret);b.classList.toggle('r1',!!ret);
+    b.classList.toggle('in',!!ret&&k>dep&&k<ret);b.classList.toggle('sug',!!sug&&k===sug)});
+  $('#sDep').classList.toggle('on',mode==='dep');$('#sRet').classList.toggle('on',mode==='ret');
   $('#sDep b').textContent=dep?fdw(dep):'Pick a day';$('#sRet b').textContent=ret?fdw(ret):(dep?'Pick a day':'—');
-  const c=(d.code||'').toUpperCase(),eo=e&&e.o||d.origin,o=e&&(!ret||e.ret===ret)?eo:D.origin;
-  const fareE=x=>x.fare!=null?x.fare:Math.max(0,x.price-(d.extra||0));
-  let sum,btn;
+  $('#calHint').textContent=mode==='ret'&&dep?(vals.length?`Round-trip prices if you leave ${fdw(dep)} and come back on each day. Tap Leave to change your departure.`:`No saved return prices for leaving ${fdw(dep)}. Pick any return day and check the live price.`)
+    :'Tap the day you want to leave. Each price is the cheapest saved round trip leaving that day.';
+  const c=(d.code||'').toUpperCase(),x=dep&&ret?exactFare(dep,ret):null,eo=(x&&x.o)||(e&&e.o)||d.origin,o=x?eo:(e&&!ret?eo:D.origin);
+  const fareE=y=>y.fare!=null?y.fare:Math.max(0,y.price-(d.extra||0));
+  let sum,btn,live='';
   if(!dep){sum=`<div><div class="big">Pick dates</div><div class="dts">Tap a departure day on the calendar</div></div>`;btn=`<span class="btn" aria-disabled="true">Check price</span>`}
   else if(!ret){
-    sum=e?`<div><div class="big">${money(e.price)}</div><div class="dts">Leave ${fdw(dep)}${e.ret?' · best return '+fdw(e.ret):''}${eo!==D.origin?' · from '+eo:''}</div></div><div class="note">Now pick a return day</div>`:`<div><div class="big">—</div><div class="dts">Leave ${fdw(dep)}</div></div><div class="note">Now pick a return day</div>`;
+    sum=e?`<div><div class="big">${money(e.price)}</div><div class="dts">Leave ${fdw(dep)}${e.ret?', best return '+fdw(e.ret):''}${eo!==D.origin?', from '+eo:''}</div></div><div class="note">Now pick a return day</div>`:`<div><div class="big">—</div><div class="dts">Leave ${fdw(dep)}</div></div><div class="note">Now pick a return day</div>`;
     btn=e&&e.ret?`<button class="btn" data-act="usebest">Use ${fd(dep)} – ${fd(e.ret)}</button>`:`<a class="btn g" href="${gLink(o,d.name,dep,'')}" target="_blank" rel="noopener">Check one-way prices</a>`}
   else{
-    const exact=e&&e.ret===ret,n=dd(dep,ret);
-    if(exact){const f=fareE(e),ex=e.price-f;
-      sum=`<div><div class="big">${money(e.price)}</div><div class="dts">${fd(dep)} – ${fd(ret)}, ${n} nights, ${e.stops?e.stops+' stop':'nonstop'}${eo!==D.origin?', from '+eo:''}</div></div><div class="note">${K(urp(f))} UR or ${K(mrp(f))} MR${ex?'<br>includes '+money(ex)+' drive':''}</div>`;
-      btn=`<a class="btn" href="${esc(e.link||(c?avLink(o,c,dep,ret):gLink(o,d.name,dep,ret)))}" target="_blank" rel="noopener">Book this fare</a>`}
-    else{sum=`<div><div class="big" style="font-size:20px">No saved fare</div><div class="dts">${fd(dep)} – ${fd(ret)} · ${n} nights${e?' · this day from '+money(e.price)+' (back '+fd(e.ret)+')':''}</div></div>`;
-      btn=`<a class="btn" href="${gLink(o,d.name,dep,ret)}" target="_blank" rel="noopener">Check live price</a>`}
+    const n=dd(dep,ret);
+    if(x){const f=fareE(x),ex=x.price-f;
+      sum=`<div><div class="big">${money(x.price)}</div><div class="dts">${fd(dep)} – ${fd(ret)}, ${n} nights, ${x.stops?x.stops+' stop':'nonstop'}${eo!==D.origin?', from '+eo:''}</div></div><div class="note">${K(urp(f))} UR or ${K(mrp(f))} MR${ex?'<br>includes '+money(ex)+' drive':''}</div>`;
+      btn=`<a class="btn" href="${esc(x.link||(c?avLink(eo,c,dep,ret):gLink(eo,d.name,dep,ret)))}" target="_blank" rel="noopener">Book this fare</a>`}
+    else{sum=`<div><div class="big" style="font-size:20px">No saved fare</div><div class="dts">${fd(dep)} – ${fd(ret)}, ${n} nights. Check the live price for these exact dates.</div></div>`;
+      btn=`<a class="btn${API&&!noLive?' g':''}" href="${gLink(o,d.name,dep,ret)}" target="_blank" rel="noopener">Open Google Flights</a>`}
+    if(API&&!noLive&&c){const L=C.live&&C.live.key===dep+'|'+ret+'|'+o?C.live:null;
+      if(!L)btn=`<button class="btn${x?' g':''}" data-act="live">Get live price</button>`+btn;
+      else if(L.loading)live=`<div class="live"><span class="spin"></span>Checking Google Flights…</div>`;
+      else if(L.err)live=`<div class="live">${esc(L.err)}</div>`;
+      else{const lv={low:'Low for these dates',typical:'Typical for these dates',high:'High for these dates'}[L.level]||'';
+        live=`<div class="live"><div class="lr"><span>Google Flights now from ${o}</span><b>${L.price!=null?money(L.price):'No flights found'}</b></div>${L.price!=null?`<div class="ls">${esc(L.airline||'')}${L.stops!=null?', '+(L.stops?L.stops+' stop':'nonstop'):''}${L.minutes?', '+hm(L.minutes):''}${lv?'. '+lv:''}${L.typical?` (usually ${money(L.typical[0])}–${money(L.typical[1])})`:''}.</div>`:''}</div>`;
+        if(L.link&&L.price!=null)btn=`<a class="btn" href="${esc(L.link)}" target="_blank" rel="noopener">Book on Google</a>`+(x?btn.replace('class="btn"','class="btn g"').replace('Book this fare','Saved fare'):'')}}
   }
-  $('#dbar').innerHTML=`<div class="sum">${sum}</div><div class="btns" style="margin:0">${btn}</div>`;
-  const L=[];
-  if(dep){L.push(['Google Flights',gLink(o,d.name,dep,ret)]);if(c){L.push(['Aviasales',avLink(o,c,dep,ret)]);L.push(['Kayak',`https://www.kayak.com/flights/${o}-${c}/${dep}${ret?'/'+ret:''}`]);L.push(['Skyscanner',`https://www.skyscanner.com/transport/flights/${o.toLowerCase()}/${c.toLowerCase()}/${dep.slice(2).replace(/-/g,'')}${ret?'/'+ret.slice(2).replace(/-/g,''):''}/`])}}
-  L.push(['Chase Travel','https://travel.chase.com'],['Amex Travel','https://www.amextravel.com']);
-  $('#cmp').innerHTML=L.map(([n,u])=>`<a class="lnk" href="${esc(u)}" target="_blank" rel="noopener"><span>${n}</span><span>${dep&&!/travel\./.test(u)?fd(dep)+(ret?' – '+fd(ret):''):'Open'} ›</span></a>`).join('');
+  $('#dbar').innerHTML=`<div class="sum">${sum}</div>${live}<div class="btns" style="margin:0">${btn}</div>`;
+  const Lk=[];
+  if(dep){Lk.push(['Google Flights',gLink(o,d.name,dep,ret)]);if(c){Lk.push(['Aviasales',avLink(o,c,dep,ret)]);Lk.push(['Kayak',`https://www.kayak.com/flights/${o}-${c}/${dep}${ret?'/'+ret:''}`]);Lk.push(['Skyscanner',`https://www.skyscanner.com/transport/flights/${o.toLowerCase()}/${c.toLowerCase()}/${dep.slice(2).replace(/-/g,'')}${ret?'/'+ret.slice(2).replace(/-/g,''):''}/`])}}
+  Lk.push(['Chase Travel','https://travel.chase.com'],['Amex Travel','https://www.amextravel.com']);
+  $('#cmp').innerHTML=Lk.map(([n,u])=>`<a class="lnk" href="${esc(u)}" target="_blank" rel="noopener"><span>${n}</span><span>${dep&&!/travel\./.test(u)?fd(dep)+(ret?' – '+fd(ret):''):'Open'} ›</span></a>`).join('');
+}
+let noLive=false;
+function getLive(){
+  const {d,dep,ret}=C,x=exactFare(dep,ret),e=C.map[dep],o=(x&&x.o)||(e&&!ret&&e.o)||D.origin,key=dep+'|'+ret+'|'+o,kk=d.key;
+  C.live={key,loading:true};paint();
+  fetch(`${API}/live?o=${o}&dest=${encodeURIComponent(d.code)}&dep=${dep}${ret?'&ret='+ret:''}`).then(r=>r.json()).then(j=>{
+    if(!C||C.d.key!==kk||C.live.key!==key)return;
+    if(j.error==='no_key'){noLive=true;C.live=null}
+    else if(j.error)C.live={key,err:'Google Flights couldn’t price this route right now. Use Open Google Flights instead.'};
+    else C.live={key,...j};paint()})
+  .catch(()=>{if(C&&C.live&&C.live.key===key){C.live={key,err:'Live check failed. Try again in a moment.'};paint()}});
 }
 function pickDay(k){
-  if(!C.dep||C.ret||k<=C.dep){C.dep=k;C.ret=''}else C.ret=k;paint();
+  if(C.mode==='dep'||!C.dep||k<=C.dep){C.dep=k;C.ret='';C.mode='ret'}else C.ret=k;C.live=null;paint();
 }
 const closeDetail=()=>{$('#det').classList.remove('open');C=null;render()};
 window.addEventListener('popstate',()=>{if($('#det').classList.contains('open'))closeDetail()});
@@ -521,7 +570,9 @@ document.addEventListener('click',e=>{
   else if(a==='refresh')load();
   else if(a==='back'){if(history.state&&history.state.d)history.back();else closeDetail()}
   else if(a==='star'){const k=C.d.key;saved.has(k)?saved.delete(k):saved.add(k);st.set('saved',[...saved]);t.textContent=saved.has(k)?'★':'☆';t.style.color=saved.has(k)?'#f59e0b':'inherit'}
-  else if(a==='usebest'){C.ret=C.map[C.dep].ret;paint()}
+  else if(a==='usebest'){C.ret=C.map[C.dep].ret;C.mode='ret';C.live=null;paint()}
+  else if(a==='mDep'){C.mode='dep';paint()}else if(a==='mRet'){if(C.dep){C.mode='ret';paint()}}
+  else if(a==='live')getLive();
   else if(a==='pd-'){P.days=Math.max(5,P.days-1);render()}else if(a==='pd+'){P.days=Math.min(21,P.days+1);render()}
 });
 $('#bd').onclick=closeSheet;
@@ -556,12 +607,12 @@ function openPlace(p){
   const key='search|'+p.code,stub={key,search:true,name:p.city||p.name,code:p.code,cc:p.cc,country:p.country,bucket:p.cc==='US'?'domestic':'international',origin:D.origin,extra:0,price:null,cal:[],alts:[],hist:[],loading:!!API};
   openDetail(stub);
   if(!API)return;
-  fetch(`${API}/search?dest=${encodeURIComponent(p.code)}`).then(r=>r.json()).then(j=>{
+  fetch(`${API}/search?dest=${encodeURIComponent(p.code)}&origins=${ORIG.join(',')}`).then(r=>r.json()).then(j=>{
     if(!C||C.d.key!==key)return;
     if(j.error)throw new Error(j.error);
     const cal=(j.cal||[]).filter(c=>c[1]),by={};
     for(const c of cal){const a={o:c[5],price:c[2],fare:c[6],dep:c[0],ret:c[1],link:c[4],stops:c[3]};if(!by[a.o]||a.price<by[a.o].price)by[a.o]=a}
-    const alts=Object.values(by).sort((x,y)=>x.price-y.price),b=alts[0]&&{...alts[0]},full={...stub,loading:false,cal,alts,best:b};
+    const alts=Object.values(by).sort((x,y)=>x.price-y.price),b=alts[0]&&{...alts[0]},full={...stub,loading:false,cal,pairs:j.pairs||[],alts,best:b};
     if(b)Object.assign(full,{origin:b.o,price:b.price,fare:b.fare,dep:b.dep,ret:b.ret,link:b.link?(/^https?:/.test(b.link)?b.link:AV+b.link):'',stops:b.stops,extra:b.price-b.fare});
     openDetail(full,false);
   }).catch(err=>{if(C&&C.d.key===key)openDetail({...stub,loading:false,err:'Couldn’t load prices right now. Pick dates below to check live prices.'},false)});
