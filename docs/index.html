@@ -1,45 +1,184 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#0b5cff">
+<meta name="theme-color" content="#1d4ed8">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="CMH Flights">
 <title>CMH Flight Deals</title>
 <style>
-:root{--bg:#f4f6fa;--card:#fff;--tx:#111827;--mu:#6b7280;--ac:#0b5cff;--gn:#12805c;--bd:#e5e7eb}
-@media(prefers-color-scheme:dark){:root{--bg:#0e1116;--card:#171b22;--tx:#f3f4f6;--mu:#9ca3af;--ac:#5b8cff;--gn:#3ddc97;--bd:#262c36}}
-*{box-sizing:border-box}html{height:100%}
-body{margin:0;min-height:100%;background:var(--bg);color:var(--tx);font:16px/1.4 -apple-system,system-ui,Segoe UI,Roboto,sans-serif;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom)}
-header{padding:16px 16px 4px}h1{margin:0;font-size:22px}.up{color:var(--mu);font-size:13px}
-nav{display:flex;gap:8px;padding:12px 16px;position:sticky;top:env(safe-area-inset-top);background:var(--bg)}
-nav button{flex:1;padding:10px 4px;border:1px solid var(--bd);border-radius:10px;background:var(--card);color:var(--tx);font:inherit;font-size:14px}
-nav button.on{background:var(--ac);border-color:var(--ac);color:#fff}
-.opt{padding:0 16px 8px;color:var(--mu);font-size:14px}
-main{padding:0 16px 24px;display:grid;gap:10px;max-width:640px;margin:auto}
-a.c{display:block;text-decoration:none;color:inherit;background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px}
-.r{display:flex;justify-content:space-between;align-items:center;gap:8px}
-.n{font-weight:600}.p{font-size:22px;font-weight:700;color:var(--ac)}.m{color:var(--mu);font-size:13px;margin-top:4px}
-.dn{color:var(--gn);font-size:13px;font-weight:600}svg{color:var(--mu)}.e{color:var(--mu);text-align:center;padding:32px 0}
+:root{--bg:#f3f5fb;--card:#fff;--tx:#0f172a;--mu:#64748b;--ac:#2563eb;--gn:#059669;--rd:#dc2626;--bd:#e2e8f0;--chip:#e8edf8;--sh:0 1px 2px rgba(15,23,42,.06),0 4px 14px rgba(15,23,42,.06)}
+@media(prefers-color-scheme:dark){:root{--bg:#0b0f17;--card:#151b27;--tx:#f1f5f9;--mu:#94a3b8;--ac:#6b9bff;--gn:#34d399;--rd:#f87171;--bd:#243044;--chip:#1c2536;--sh:0 1px 2px rgba(0,0,0,.4)}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.4 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif;padding-bottom:env(safe-area-inset-bottom)}
+header{background:linear-gradient(135deg,#1d4ed8,#6d28d9);color:#fff;padding:calc(env(safe-area-inset-top) + 18px) 18px 56px;position:relative;overflow:hidden}
+header:after{content:"✈";position:absolute;right:-10px;top:6px;font-size:120px;opacity:.12;transform:rotate(-12deg)}
+h1{margin:0;font-size:26px;letter-spacing:-.5px}h1 small{font-weight:500;opacity:.8;font-size:15px;display:block;margin-bottom:2px;letter-spacing:0}
+.up{opacity:.85;font-size:13px;margin-top:6px;max-width:85%}
+#rf{position:absolute;right:16px;top:calc(env(safe-area-inset-top) + 14px);z-index:2;background:rgba(255,255,255,.2);border:0;color:#fff;border-radius:20px;padding:6px 12px;font:inherit;font-size:13px}
+.wrap{max-width:660px;margin:-40px auto 0;padding:0 14px 28px;position:relative}
+.seg{display:flex;background:var(--card);border-radius:14px;padding:4px;box-shadow:var(--sh);gap:4px}
+.seg button{flex:1;border:0;background:none;color:var(--mu);padding:10px 2px;border-radius:10px;font:inherit;font-size:14px;font-weight:600}
+.seg button.on{background:var(--ac);color:#fff}
+.bar{display:flex;gap:8px;margin:12px 0 6px;align-items:center}
+select,input[type=date]{font:inherit;font-size:14px;color:var(--tx);background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:8px 10px;min-width:0}
+.bar select{flex:1}
+.chips{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 4px}
+.chip{border:1px solid var(--bd);background:var(--chip);color:var(--tx);border-radius:20px;padding:6px 12px;font:inherit;font-size:13px}
+.chip.on{background:var(--ac);border-color:var(--ac);color:#fff}
+#fp{display:none;background:var(--card);border-radius:14px;padding:12px;margin:8px 0;box-shadow:var(--sh);gap:10px;grid-template-columns:1fr 1fr}
+#fp.open{display:grid}#fp label{font-size:12px;color:var(--mu);display:block;margin-bottom:3px}#fp .full{grid-column:1/-1}
+#fp input[type=date],#fp select{width:100%}input[type=range]{width:100%;accent-color:var(--ac)}
+.note{font-size:12.5px;color:var(--mu);margin:6px 2px}
+#l{display:grid;gap:10px;margin-top:8px}
+.c{position:relative;display:block;background:var(--card);border-radius:16px;padding:14px 14px 12px 16px;box-shadow:var(--sh);border-left:5px solid hsl(var(--h) 70% 55%);cursor:pointer}
+.r{display:flex;justify-content:space-between;align-items:flex-start;gap:8px}
+.n{font-weight:700;font-size:18px;letter-spacing:-.2px;padding-right:30px}.p{font-size:26px;font-weight:800;letter-spacing:-1px;color:var(--ac);line-height:1}
+.m{color:var(--mu);font-size:13px;margin-top:5px}.pt{color:var(--mu);font-size:12.5px;margin-top:6px}
+.bd{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.b{font-size:11.5px;font-weight:700;padding:3px 8px;border-radius:20px;background:rgba(5,150,105,.14);color:var(--gn)}
+.b.w{background:rgba(220,38,38,.13);color:var(--rd)}.b.i{background:rgba(37,99,235,.13);color:var(--ac)}
+.st{position:absolute;right:8px;top:8px;border:0;background:none;font-size:22px;color:var(--mu);padding:4px 8px}.st.on{color:#f59e0b}
+svg.sp{color:var(--mu);flex:none}.e{color:var(--mu);text-align:center;padding:40px 10px}
+#ov{position:fixed;inset:0;background:rgba(2,6,23,.55);display:none;z-index:10}#ov.open{display:block}
+#sh{position:fixed;left:0;right:0;bottom:0;max-height:90vh;overflow:auto;background:var(--card);border-radius:22px 22px 0 0;z-index:11;padding:8px 16px calc(env(safe-area-inset-bottom) + 20px);transform:translateY(105%);transition:transform .25s;max-width:660px;margin:auto}
+#sh.open{transform:none}.grab{width:44px;height:5px;border-radius:3px;background:var(--bd);margin:4px auto 12px}
+.mh{display:flex;align-items:center;justify-content:space-between;margin:10px 0}.mh button{border:0;background:var(--chip);color:var(--tx);width:38px;height:38px;border-radius:50%;font-size:18px}.mh button:disabled{opacity:.3}
+.g{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.dow{font-size:11px;color:var(--mu);text-align:center}
+.d{aspect-ratio:1/1.05;border-radius:9px;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:10.5px;border:2px solid transparent;color:var(--tx);background:transparent;padding:0;font-family:inherit}
+.d i{font-style:normal;color:var(--mu);font-size:10px}.d b{font-size:12px}.d.x{opacity:.3}.d.s{border-color:var(--ac)}.d.o{opacity:.18}
+.sum{background:var(--chip);border-radius:14px;padding:12px;margin-top:12px}
+.bk{display:block;text-align:center;background:var(--ac);color:#fff;text-decoration:none;border-radius:12px;padding:13px;font-weight:700;margin-top:10px}
+.lg{display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--mu);margin-top:8px}.lg span{flex:1;height:8px;border-radius:4px;background:linear-gradient(90deg,hsl(140 60% 45%),hsl(60 70% 50%),hsl(10 70% 50%))}
 </style></head><body>
-<header><h1>✈ Flights from <span id="o">CMH</span></h1><div class="up" id="u">Loading…</div></header>
-<nav><button data-t="domestic" class="on">Domestic</button><button data-t="international">International</button><button data-t="deals">Deals</button></nav>
-<div class="opt" id="opt"><label><input type="checkbox" id="nd"> Nonstop only</label></div>
-<main id="l"></main>
+<header><button id="rf">↻ Refresh</button><h1><small>Cheapest flights from</small><span id="o">CMH</span> · Columbus</h1><div class="up" id="u">Loading…</div></header>
+<div class="wrap">
+<div class="seg" id="tabs"><button data-t="domestic">🇺🇸 Domestic</button><button data-t="international">🌍 International</button><button data-t="deals">🔥 Deals</button></div>
+<div id="ctl">
+<div class="bar"><select id="so"><option value="cheap">Sort: Cheapest</option><option value="deal">Sort: Best deal vs. usual</option><option value="soon">Sort: Soonest</option></select><button class="chip" id="fb">Dates &amp; budget</button></div>
+<div class="chips"><button class="chip" id="cw">Weekend trips</button><button class="chip" id="cn">Nonstop</button><button class="chip" id="cs">★ Saved</button></div>
+<div id="fp">
+<div><label>Leave on or after</label><input type="date" id="df"></div><div><label>Leave on or before</label><input type="date" id="dt"></div>
+<div><label>Trip at least</label><select id="l1"><option value="">any</option></select></div><div><label>Trip at most</label><select id="l2"><option value="">any</option></select></div>
+<div class="full"><label id="bl">Budget</label><input type="range" id="bg" min="0" max="100" step="10"></div>
+<div class="full"><button class="chip" id="rs">Reset filters</button></div>
+</div>
+<div class="note" id="nt"></div>
+</div>
+<div id="l"></div>
+</div>
+<div id="ov"></div><div id="sh"></div>
 <script>
-const $=s=>document.querySelector(s);let D,tab='domestic';
+const $=s=>document.querySelector(s),AV='https://www.aviasales.com',UR=1.25,MR=1.0; // cents per point, matches the script
+const st={get(k,d){try{const v=localStorage.getItem(k);return v==null?d:JSON.parse(v)}catch(e){return d}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+const S={tab:st.get('tab','domestic'),sort:'cheap',nd:false,wk:false,sv:false,from:'',to:'',l1:'',l2:'',bg:null};
+let D,saved=new Set(st.get('saved',[]));
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const ago=i=>{const m=(Date.now()-new Date(i))/6e4;return m<60?Math.round(m)+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' d ago'};
-const spark=h=>{if(h.length<2)return'';const a=Math.min(...h),b=Math.max(...h),r=b-a||1;return `<svg viewBox="0 0 60 20" width="60" height="20"><polyline points="${h.map((v,i)=>`${i*60/(h.length-1)},${18-(v-a)/r*16}`).join(' ')}" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>`};
-function render(){
-  $('#o').textContent=D.origin;$('#u').textContent='Updated '+ago(D.updated)+'. Fares can be cached, so confirm before booking.';
-  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.t===tab));
-  $('#opt').style.display=tab==='deals'?'none':'';
-  let h='';
-  if(tab==='deals'){h=D.posts.map(p=>`<a class="c" href="${esc(p.link)}"><div class="n">${esc(p.title)}</div><div class="m">${p.kind==='card'?'Card offer · ':''}${esc(p.source)} · ${ago(p.seen_at)}</div></a>`).join('')||'<div class="e">No error fares or sales for your airports right now.</div>'}
-  else{h=D.deals.filter(d=>d.bucket===tab&&(!$('#nd').checked||!d.stops)).map(d=>`<a class="c" href="${esc(d.link||'#')}"><div class="r"><div class="n">${esc(d.name)}</div><div class="p">$${Math.round(d.price)}</div></div><div class="r"><div class="m">${esc(d.dates)}${d.dates?' · ':''}${d.stops?d.stops+' stop':'nonstop'}${d.airline?' · '+esc(d.airline):''} · ${esc(d.source)}</div>${spark(d.hist)}</div><div class="m">≈ ${d.ur.toLocaleString()} Chase UR · ${d.mr.toLocaleString()} Amex MR</div>${d.prev&&d.price<d.prev?`<div class="dn">↓ down from $${Math.round(d.prev)}</div>`:''}</a>`).join('')||'<div class="e">Nothing here yet.</div>'}
-  $('#l').innerHTML=h;
+const dt=s=>new Date(s+'T00:00:00'),$$=s=>[...document.querySelectorAll(s)];
+const fd=s=>s?dt(s).toLocaleDateString('en-US',{month:'short',day:'numeric'}):'';
+const fdl=s=>s?dt(s).toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'}):'';
+const dd=(a,b)=>Math.round((dt(b)-dt(a))/864e5);
+const ago=i=>{const m=(Date.now()-new Date(i))/6e4;return m<2?'just now':m<60?Math.round(m)+' min ago':m<1440?Math.round(m/60)+' h ago':Math.round(m/1440)+' d ago'};
+const med=a=>{const s=[...a].sort((x,y)=>x-y),n=s.length;return n?(n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2):0};
+const hue=n=>{let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))%360;return h};
+const spark=h=>{if(h.length<2)return'';const a=Math.min(...h),b=Math.max(...h),r=b-a||1;return `<svg class="sp" viewBox="0 0 60 20" width="60" height="20"><polyline points="${h.map((v,i)=>`${(i*60/(h.length-1)).toFixed(1)},${(18-(v-a)/r*16).toFixed(1)}`).join(' ')}" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>`};
+const pts=p=>`${Math.round(p*100/UR).toLocaleString()} Chase UR · ${Math.round(p*100/MR).toLocaleString()} Amex MR`;
+
+function entries(d){
+  const o=[],m=(d.dates||'').match(/(\d{4}-\d\d-\d\d)(?: to (\d{4}-\d\d-\d\d))?/),dep=d.dep||(m&&m[1])||'',ret=d.ret||(m&&m[2])||'';
+  o.push({dep,ret,price:d.price,stops:d.stops,link:d.link});
+  for(const c of d.cal||[])o.push({dep:c[0],ret:c[1],price:c[2],stops:c[3],link:c[4]?AV+c[4]:d.link});
+  return o;
 }
-document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;render()});
-$('#nd').onchange=()=>render();
-fetch('deals.json?'+Date.now()).then(r=>r.json()).then(d=>{D=d;render()}).catch(()=>{$('#u').textContent='No data yet. Run the workflow once, then reload.'});
+const dateFilters=()=>S.from||S.to||S.l1||S.l2||S.wk;
+function ok(e){
+  if(S.nd&&e.stops)return false;
+  if(dateFilters()&&!e.dep)return false;
+  if(S.from&&e.dep<S.from)return false;if(S.to&&e.dep>S.to)return false;
+  if(S.l1||S.l2){if(!e.ret)return false;const n=dd(e.dep,e.ret);if(S.l1&&n<+S.l1)return false;if(S.l2&&n>+S.l2)return false}
+  if(S.wk){if(![5,6].includes(dt(e.dep).getDay()))return false;if(e.ret&&![0,1].includes(dt(e.ret).getDay()))return false}
+  return true;
+}
+function view(d){
+  const ms=entries(d).filter(ok);if(!ms.length)return null;
+  const e=ms.reduce((a,b)=>b.price<a.price?b:a);
+  const prices=(d.cal||[]).map(c=>c[2]),ref=prices.length>=5?med(prices):(d.hist||[]).length>=3?med(d.hist.slice(0,-1).length?d.hist.slice(0,-1):d.hist):(d.prev||e.price);
+  return {d,e,ref,score:e.price/(ref||e.price)};
+}
+function render(){
+  $('#o').textContent=D.origin;$('#u').textContent='Updated '+ago(D.updated)+'. Fares are cached, so confirm before booking.';
+  $$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===S.tab));
+  const deals=S.tab==='deals';$('#ctl').style.display=deals?'none':'';
+  if(deals){$('#l').innerHTML=D.posts.map(p=>`<a class="c" style="--h:${p.kind==='card'?260:15}" href="${esc(p.link)}"><div class="n">${p.kind==='card'?'💳':'🔥'} ${esc(p.title)}</div><div class="m">${p.kind==='card'?'Card offer':'Deal'} · ${esc(p.source)} · ${ago(p.seen_at)}</div></a>`).join('')||'<div class="e">No error fares or sales for your airports right now.<br>Check back later. This list updates every 6 hours.</div>';return}
+  const pool=D.deals.filter(d=>d.bucket===S.tab);
+  const mx=Math.max(50,Math.ceil(Math.max(0,...pool.map(d=>d.price))/50)*50),bg=$('#bg');
+  bg.max=mx;if(S.bg==null||S.bg>mx)S.bg=mx;bg.value=S.bg;$('#bl').textContent=S.bg>=mx?'Budget: no limit':'Budget: up to $'+S.bg;
+  let v=pool.map(view).filter(Boolean).filter(x=>x.e.price<=S.bg&&(!S.sv||saved.has(x.d.key)));
+  const cmp={cheap:(a,b)=>a.e.price-b.e.price,deal:(a,b)=>a.score-b.score,soon:(a,b)=>(a.e.dep||'9').localeCompare(b.e.dep||'9')||a.e.price-b.e.price}[S.sort];
+  v.sort((a,b)=>(saved.has(b.d.key)-saved.has(a.d.key))||cmp(a,b));
+  const nf=[S.from,S.to,S.l1,S.l2,S.bg<mx,S.wk].filter(Boolean).length;$('#fb').textContent='Dates & budget'+(nf?` (${nf})`:'');
+  $('#nt').textContent=dateFilters()?'Showing the cheapest fare that matches your dates. Open a city to see its full calendar.':'';
+  $$('#cw').forEach(b=>b.classList.toggle('on',S.wk));$('#cn').classList.toggle('on',S.nd);$('#cs').classList.toggle('on',S.sv);
+  $('#l').innerHTML=v.map(({d,e,ref})=>{
+    const badges=[],pc=ref?Math.round((1-e.price/ref)*100):0;
+    if(ref&&e.price<=ref*.45&&(d.cal||[]).length+(d.hist||[]).length>=5)badges.push('<span class="b w">⚠ Possible error fare</span>');
+    else if(pc>=25)badges.push(`<span class="b">🔥 ${pc}% below usual</span>`);
+    const h=d.hist||[];if(h.length>=4&&d.price<=Math.min(...h.slice(0,-1)))badges.push('<span class="b i">📉 30-day low</span>');
+    if(d.prev&&d.price<d.prev)badges.push(`<span class="b">↓ from $${Math.round(d.prev)}</span>`);
+    const when=e.dep?fd(e.dep)+(e.ret?' → '+fd(e.ret):''):esc(d.dates);
+    return `<div class="c" style="--h:${hue(d.name)}" data-k="${esc(d.key)}"><button class="st${saved.has(d.key)?' on':''}" data-s="${esc(d.key)}" aria-label="Save">${saved.has(d.key)?'★':'☆'}</button>
+<div class="r"><div class="n">${esc(d.name)}</div></div><div class="r" style="margin-top:6px"><div class="p">$${Math.round(e.price)}</div>${spark(h)}</div>
+<div class="m">${when} · ${e.stops?e.stops+' stop':'nonstop'}${d.airline?' · '+esc(d.airline):''}${(d.cal||[]).length?' · 📅 calendar':''}</div>
+<div class="pt">≈ ${pts(e.price)}</div>${badges.length?`<div class="bd">${badges.join('')}</div>`:''}</div>`}).join('')||`<div class="e">Nothing matches. Try widening the dates or budget.</div>`;
+}
+/* calendar sheet */
+let sel,mi,cur;
+function openSheet(k){
+  const d=D.deals.find(x=>x.key===k);if(!d)return;cur=d;
+  const all=entries(d),cal=(d.cal||[]).map(c=>({dep:c[0],ret:c[1],price:c[2],stops:c[3],link:c[4]?AV+c[4]:d.link}));
+  const map={};for(const e of cal.length?cal:all.slice(0,1))if(e.dep)map[e.dep]=map[e.dep]&&map[e.dep].price<=e.price?map[e.dep]:e;
+  if(all[0].dep&&!map[all[0].dep])map[all[0].dep]=all[0];
+  cur.map=map;const keys=Object.keys(map).sort();
+  cur.months=[...new Set(keys.map(x=>x.slice(0,7)))];
+  const m=entries(d).filter(ok).sort((a,b)=>a.price-b.price)[0]||all[0];sel=m&&m.dep&&map[m.dep]?map[m.dep]:map[keys[0]]||all[0];
+  mi=Math.max(0,cur.months.indexOf((sel.dep||'').slice(0,7)));drawSheet();
+  $('#ov').classList.add('open');$('#sh').classList.add('open');
+}
+function drawSheet(){
+  const d=cur,map=d.map,ps=Object.values(map).map(e=>e.price),lo=Math.min(...ps),hi=Math.max(...ps),mo=d.months[mi];
+  let g='';
+  if(mo){const [y,m]=mo.split('-').map(Number),first=new Date(y,m-1,1).getDay(),n=new Date(y,m,0).getDate();
+    g='<div class="g">'+'SMTWTFS'.split('').map(x=>`<div class="dow">${x}</div>`).join('')+'<div></div>'.repeat(first);
+    for(let i=1;i<=n;i++){const key=`${mo}-${String(i).padStart(2,'0')}`,e=map[key];
+      if(!e){g+=`<div class="d x"><i>${i}</i></div>`;continue}
+      const t=hi===lo?0:(e.price-lo)/(hi-lo),h=Math.round(140-130*t);
+      g+=`<button class="d${sel&&sel.dep===key?' s':''}${dateFilters()&&!ok(e)?' o':''}" data-d="${key}" style="background:hsl(${h} 65% 48%/.22)"><i>${i}</i><b>$${Math.round(e.price)}</b></button>`}
+    g+='</div>'}
+  const L=sel;
+  $('#sh').innerHTML=`<div class="grab"></div><div class="r"><div class="n" style="font-size:22px">${esc(d.name)}</div><div class="m" style="margin:4px 0 0">${esc(D.origin)} →</div></div>
+${mo?`<div class="mh"><button id="pm" ${mi<1?'disabled':''}>‹</button><b>${dt(mo+'-01').toLocaleDateString('en-US',{month:'long',year:'numeric'})}</b><button id="nm" ${mi>=d.months.length-1?'disabled':''}>›</button></div>${g}<div class="lg">$${Math.round(lo)}<span></span>$${Math.round(hi)}</div>`:''}
+${(d.cal||[]).length?'':'<div class="note">A full price calendar is built for the cheapest destinations on each tab. This one only has its single best fare.</div>'}
+<div class="sum"><div class="p">$${Math.round(L.price)}</div><div class="m">${L.dep?fdl(L.dep)+(L.ret?' → '+fdl(L.ret)+' ('+dd(L.dep,L.ret)+' nights)':' · one way'):esc(d.dates)} · ${L.stops?L.stops+' stop':'nonstop'}</div><div class="pt">≈ ${pts(L.price)}</div></div>
+<a class="bk" href="${esc(L.link||'#')}">Search this fare ↗</a><div class="note">Cached fares can change. Confirm price and baggage rules before paying. Compare in the Chase and Amex travel portals too.</div>`;
+}
+const closeSheet=()=>{$('#ov').classList.remove('open');$('#sh').classList.remove('open')};
+/* events */
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;S.tab=b.dataset.t;S.bg=null;st.set('tab',S.tab);render();scrollTo(0,0)};
+$('#so').onchange=e=>{S.sort=e.target.value;render()};
+$('#fb').onclick=()=>$('#fp').classList.toggle('open');
+$('#cw').onclick=()=>{S.wk=!S.wk;render()};$('#cn').onclick=()=>{S.nd=!S.nd;render()};$('#cs').onclick=()=>{S.sv=!S.sv;render()};
+$('#df').onchange=e=>{S.from=e.target.value;render()};$('#dt').onchange=e=>{S.to=e.target.value;render()};
+$('#l1').onchange=e=>{S.l1=e.target.value;render()};$('#l2').onchange=e=>{S.l2=e.target.value;render()};
+$('#bg').oninput=e=>{S.bg=+e.target.value;render()};
+$('#rs').onclick=()=>{Object.assign(S,{from:'',to:'',l1:'',l2:'',bg:null,wk:false});['#df','#dt','#l1','#l2'].forEach(i=>$(i).value='');render()};
+$('#rf').onclick=()=>load();
+$('#l').onclick=e=>{const s=e.target.closest('[data-s]');if(s){const k=s.dataset.s;saved.has(k)?saved.delete(k):saved.add(k);st.set('saved',[...saved]);render();return}
+  const c=e.target.closest('.c[data-k]');if(c)openSheet(c.dataset.k)};
+$('#ov').onclick=closeSheet;
+$('#sh').onclick=e=>{if(e.target.id==='pm'){mi--;drawSheet()}else if(e.target.id==='nm'){mi++;drawSheet()}
+  const b=e.target.closest('[data-d]');if(b){sel=cur.map[b.dataset.d];drawSheet()}};
+for(let i=1;i<=21;i++)['#l1','#l2'].forEach(s=>$(s).add(new Option(i+(i==1?' night':' nights'),i)));
+function load(){$('#u').textContent='Loading…';
+  fetch('deals.json?'+Date.now()).then(r=>r.json()).then(d=>{D=d;if(!['domestic','international','deals'].includes(S.tab))S.tab='domestic';render()})
+  .catch(()=>{$('#u').textContent='No data yet. Run the workflow once, then tap Refresh.'})}
+load();
 </script></body></html>
