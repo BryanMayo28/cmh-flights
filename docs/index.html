@@ -1,142 +1,197 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f4f5f8" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0b0d12" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f2f3f1" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#000000" media="(prefers-color-scheme: dark)">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Schibsted+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="CMH Flights">
 <title>CMH Flights</title>
 <style>
-:root{--bg:#f4f5f8;--card:#fff;--tx:#0d1324;--mu:#6b7280;--ln:#e7e9ee;--ac:#3355ff;--acs:#eef1ff;--gn:#0e9f6e;--gns:#e6f6ef;--rd:#e11d48;--rds:#fde8ee;--sh:0 1px 2px rgba(13,19,36,.05),0 6px 20px rgba(13,19,36,.06);--tab:rgba(255,255,255,.88)}
-@media(prefers-color-scheme:dark){:root{--bg:#0b0d12;--card:#151922;--tx:#f3f4f6;--mu:#9aa3b2;--ln:#242a37;--ac:#7088ff;--acs:#1c2342;--gn:#34d399;--gns:#10291f;--rd:#fb7185;--rds:#331520;--sh:0 1px 2px rgba(0,0,0,.4);--tab:rgba(21,25,34,.9)}}
+:root{--bg:#f2f3f1;--card:#fff;--tx:#15171a;--mu:#6b6f76;--ln:#e3e5e2;--ac:#0e5e6f;--acs:#e2eef0;--gn:#0a7d4f;--gns:#e1f2e8;--rd:#b42318;--rds:#fbe9e7;--tab:rgba(242,243,241,.86);--serif:"Instrument Serif","Iowan Old Style",Georgia,serif;--sans:"Schibsted Grotesk",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+@media(prefers-color-scheme:dark){:root{--bg:#000;--card:#141619;--tx:#f2f3f4;--mu:#9a9fa6;--ln:#26292d;--ac:#5cc4d6;--acs:#0f2a30;--gn:#3dd68c;--gns:#0d2a1c;--rd:#ff8a80;--rds:#3a1512;--tab:rgba(12,13,15,.86)}}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{margin:0;background:var(--bg);color:var(--tx)}
-body{font:16px/1.4 -apple-system,BlinkMacSystemFont,"SF Pro Text","Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased;padding-bottom:calc(env(safe-area-inset-bottom) + 76px)}
-button,select,input{font:inherit;color:inherit}button{cursor:pointer;background:none;border:0;padding:0}
-.hdr{padding:calc(env(safe-area-inset-top) + 18px) 20px 6px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.hdr h1{margin:0;font-size:30px;line-height:1.1;letter-spacing:-.8px;font-weight:800}
-.hdr p{margin:6px 0 0;color:var(--mu);font-size:14px}
-.ib{width:40px;height:40px;border-radius:50%;background:var(--card);box-shadow:var(--sh);display:grid;place-items:center;font-size:18px;flex:none}
-.hb{display:flex;gap:8px}
-main{max-width:640px;margin:auto;padding:8px 16px 24px}
-.seg{display:flex;background:var(--ln);border-radius:12px;padding:3px;margin:6px 0 12px}
-.seg button{flex:1;padding:9px 0;border-radius:10px;font-weight:600;font-size:15px;color:var(--mu)}
-.seg button.on{background:var(--card);color:var(--tx);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.tools{display:flex;gap:8px;align-items:center;margin-bottom:10px}
-.fbtn{display:flex;align-items:center;gap:6px;background:var(--card);box-shadow:var(--sh);border-radius:999px;padding:9px 14px;font-weight:600;font-size:15px}
-.fbtn.on{background:var(--ac);color:#fff}
+body{font:16px/1.45 var(--sans);-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;padding-bottom:calc(env(safe-area-inset-bottom) + 76px)}
+button,select,input{font:inherit;color:inherit}button{cursor:pointer;background:none;border:0;padding:0;text-align:inherit}
+:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+.hdr{padding:calc(env(safe-area-inset-top) + 22px) 20px 4px;display:flex;justify-content:space-between;align-items:flex-start;gap:12px;max-width:680px;margin:auto}
+.hdr h1{margin:0;font:400 44px/1 var(--serif);letter-spacing:-.5px}
+.hdr p{margin:8px 0 0;color:var(--mu);font-size:14px}
+.ib{width:40px;height:40px;border-radius:50%;background:var(--card);border:1px solid var(--ln);display:grid;place-items:center;flex:none;color:var(--tx)}
+.ib svg{width:19px;height:19px}
+.hb{display:flex;gap:8px;padding-top:4px}
+main{max-width:680px;margin:auto;padding:12px 16px 28px}
+.seg{display:flex;gap:22px;margin:4px 2px 14px;border-bottom:1px solid var(--ln)}
+.seg button{padding:10px 0 11px;font-weight:600;font-size:15.5px;color:var(--mu);border-bottom:2px solid transparent;margin-bottom:-1px}
+.seg button.on{color:var(--tx);border-color:var(--tx)}
+.tools{display:flex;gap:8px;align-items:center;margin-bottom:12px}
+.fbtn{display:flex;align-items:center;gap:7px;border:1px solid var(--ln);background:var(--card);border-radius:999px;padding:8px 14px;font-weight:600;font-size:14.5px}
+.fbtn svg{width:16px;height:16px}
+.fbtn.on{background:var(--tx);border-color:var(--tx);color:var(--bg)}
 .sort{margin-left:auto;display:flex;align-items:center;gap:4px;color:var(--mu);font-size:14px}
-.sort select{border:0;background:none;font-weight:600;color:var(--tx);font-size:15px;-webkit-appearance:none;appearance:none;padding-right:4px}
-.chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}
-.chip{background:var(--acs);color:var(--ac);border-radius:999px;padding:6px 10px 6px 12px;font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center}
-.list{display:grid;gap:10px}
-.card{width:100%;text-align:left;display:flex;align-items:center;gap:14px;background:var(--card);border-radius:18px;padding:14px;box-shadow:var(--sh)}
-.card:active{transform:scale(.985)}
-.art{width:56px;height:56px;border-radius:14px;flex:none;display:grid;place-items:center;font-size:28px;background:linear-gradient(140deg,hsl(var(--h) 80% 62%),hsl(calc(var(--h) + 40) 75% 48%));color:#fff;font-weight:800;letter-spacing:-.5px}
-.art.t{font-size:17px}
+.sort select{border:0;background:none;font-weight:600;color:var(--tx);font-size:14.5px;-webkit-appearance:none;appearance:none}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:-2px 0 14px}
+.chip{border:1px solid var(--ln);background:var(--card);border-radius:999px;padding:5px 10px 5px 12px;font-size:13px;font-weight:600;display:flex;gap:6px;align-items:center}
+.chip span{color:var(--mu)}
+/* photos */
+.ph{position:relative;overflow:hidden;background:linear-gradient(170deg,hsl(var(--h) 45% 72%),hsl(calc(var(--h) + 30) 40% 46%));background-size:cover;background-position:center}
+.ph:after{content:"";position:absolute;inset:auto 0 0 0;height:46%;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60' preserveAspectRatio='none'%3E%3Cpath d='M0 60V38h12v-8h8v12h10V24h6v-6h4v6h6v20h8V30h14v-6h6v28h10V18l6-8 6 8v34h8V34h12v-8h10v26h8V28h6v-6h8v6h6v32z' fill='%23000' fill-opacity='.22'/%3E%3C/svg%3E") bottom/100% 100% no-repeat}
+.ph.has:after{display:none}
+.ph.has{background-color:var(--ln)}
+/* featured */
+.feat{display:block;width:100%;position:relative;border-radius:24px;overflow:hidden;margin-bottom:18px;color:#fff;aspect-ratio:4/3.1;isolation:isolate}
+.feat .ph{position:absolute;inset:0;z-index:-2}
+.feat:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,0) 35%,rgba(0,0,0,.72) 100%)}
+.feat .fc{position:absolute;left:20px;right:20px;bottom:18px;display:flex;justify-content:space-between;align-items:flex-end;gap:12px}
+.feat .fk{font-size:13px;font-weight:600;opacity:.9;margin-bottom:2px}
+.feat .fn{font:400 40px/1 var(--serif);letter-spacing:-.3px}
+.feat .fm{font-size:14px;opacity:.9;margin-top:6px}
+.feat .fp{text-align:right;flex:none}.feat .fp b{display:block;font-size:30px;font-weight:700;letter-spacing:-.8px;line-height:1}
+.feat .fp small{font-size:12.5px;opacity:.85}
+/* list */
+.list{background:var(--card);border:1px solid var(--ln);border-radius:20px;overflow:hidden}
+.list:empty{display:none}
+.card{width:100%;display:flex;align-items:center;gap:14px;padding:12px 14px;border-top:1px solid var(--ln)}
+.card:first-child{border-top:0}
+.card:active{background:var(--bg)}
+.card .ph{width:60px;height:60px;border-radius:14px;flex:none}
 .info{flex:1;min-width:0}
-.city{font-weight:700;font-size:17.5px;letter-spacing:-.3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.meta{color:var(--mu);font-size:14px;margin-top:2px}
-.sub{color:var(--mu);font-size:12.5px;margin-top:3px}
+.city{font-weight:600;font-size:17px;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.meta{color:var(--mu);font-size:14px;margin-top:1px}
+.sub{color:var(--mu);font-size:13px;margin-top:1px}
+.tag{display:inline-block;margin-top:4px;font-size:13px;font-weight:600;color:var(--gn)}
+.tag.r{color:var(--rd)}.tag.b{color:var(--ac)}
 .price{text-align:right;flex:none}
-.amt{font-size:22px;font-weight:800;letter-spacing:-.6px}
+.amt{font-size:19px;font-weight:700;letter-spacing:-.4px}
 .amt small{font-size:12px;font-weight:600;color:var(--mu);margin-left:2px}
-.tag{display:inline-block;margin-top:4px;font-size:12px;font-weight:700;padding:3px 8px;border-radius:999px;background:var(--gns);color:var(--gn)}
-.tag.r{background:var(--rds);color:var(--rd)}.tag.b{background:var(--acs);color:var(--ac)}
-.empty{text-align:center;color:var(--mu);padding:48px 20px;font-size:15px;line-height:1.5}
-.empty b{display:block;color:var(--tx);font-size:17px;margin-bottom:4px}
-.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--tab);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--ln);display:flex;justify-content:space-around;padding:8px 8px calc(env(safe-area-inset-bottom) + 6px)}
-.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;font-size:11px;font-weight:600;color:var(--mu);padding:4px 0}
-.tabbar svg{width:24px;height:24px}
-.tabbar button.on{color:var(--ac)}
+.amt.g{color:var(--gn)}
+.empty{text-align:center;color:var(--mu);padding:44px 24px;font-size:15px;line-height:1.5}
+.empty b{display:block;color:var(--tx);font:400 26px/1.15 var(--serif);margin-bottom:6px}
+.hl{font:400 26px/1.1 var(--serif);margin:22px 2px 10px}
+/* tab bar */
+.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--tab);backdrop-filter:saturate(1.6) blur(18px);-webkit-backdrop-filter:saturate(1.6) blur(18px);border-top:1px solid var(--ln);display:flex;justify-content:space-around;padding:8px 8px calc(env(safe-area-inset-bottom) + 6px)}
+.tabbar button{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;font-size:11px;font-weight:600;color:var(--mu);padding:3px 0;text-align:center}
+.tabbar svg{width:23px;height:23px}
+.tabbar button.on{color:var(--tx)}
 /* sheets */
-.bd{position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}.bd.open{opacity:1;pointer-events:auto}
-.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--card);border-radius:22px 22px 0 0;max-height:88vh;overflow:auto;padding:10px 20px calc(env(safe-area-inset-bottom) + 20px);transform:translateY(105%);transition:transform .28s cubic-bezier(.2,.8,.2,1);max-width:640px;margin:auto}
+.bd{position:fixed;inset:0;background:rgba(0,0,0,.42);z-index:40;opacity:0;pointer-events:none;transition:opacity .2s}.bd.open{opacity:1;pointer-events:auto}
+.sheet{position:fixed;left:0;right:0;bottom:0;z-index:41;background:var(--card);border-radius:24px 24px 0 0;max-height:88vh;overflow:auto;padding:10px 20px calc(env(safe-area-inset-bottom) + 20px);transform:translateY(105%);transition:transform .3s cubic-bezier(.2,.8,.2,1);max-width:680px;margin:auto}
 .sheet.open{transform:none}
-.grab{width:40px;height:5px;border-radius:3px;background:var(--ln);margin:0 auto 12px}
-.sheet h2{margin:0 0 6px;font-size:22px;letter-spacing:-.4px}
-.sec{padding:14px 0;border-bottom:1px solid var(--ln)}.sec:last-of-type{border:0}
-.sec h4{margin:0 0 10px;font-size:13px;color:var(--mu);font-weight:600;text-transform:uppercase;letter-spacing:.6px}
+.grab{width:38px;height:5px;border-radius:3px;background:var(--ln);margin:0 auto 14px}
+.sheet h2{margin:0 0 4px;font:400 32px/1.1 var(--serif)}
+.sec{padding:16px 0;border-bottom:1px solid var(--ln)}.sec:last-of-type{border:0}
+.sec h4{margin:0 0 10px;font-size:15px;font-weight:600}
 .row{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.row .lbl{font-weight:600}.row .hint{font-size:13px;color:var(--mu);font-weight:400}
+.row .lbl{font-weight:600}.hint{font-size:13.5px;color:var(--mu);font-weight:400}
 .scroll{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.scroll::-webkit-scrollbar{display:none}
-.pill{flex:none;border:1.5px solid var(--ln);border-radius:999px;padding:8px 14px;font-size:14px;font-weight:600}
-.pill.on{border-color:var(--ac);background:var(--acs);color:var(--ac)}
+.pill{flex:none;border:1px solid var(--ln);border-radius:999px;padding:8px 14px;font-size:14.5px;font-weight:600;background:var(--card)}
+.pill.on{border-color:var(--tx);background:var(--tx);color:var(--bg)}
 .two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
-.fld label{display:block;font-size:13px;color:var(--mu);margin-bottom:4px}
-.fld input,.fld select{display:block;width:100%;height:44px;border:1.5px solid var(--ln);border-radius:12px;background:var(--bg);padding:0 12px;font-size:16px;-webkit-appearance:none;appearance:none}
+.fld label{display:block;font-size:13.5px;color:var(--mu);margin-bottom:5px}
+.fld input,.fld select{display:block;width:100%;height:46px;border:1px solid var(--ln);border-radius:12px;background:var(--bg);padding:0 12px;font-size:16px;-webkit-appearance:none;appearance:none}
 input[type=range]{width:100%;accent-color:var(--ac)}
 .sw{position:relative;width:51px;height:31px;flex:none}.sw input{opacity:0;position:absolute;inset:0;margin:0;z-index:1}
 .sw span{position:absolute;inset:0;border-radius:999px;background:var(--ln);transition:.2s}.sw span:after{content:"";position:absolute;width:27px;height:27px;left:2px;top:2px;border-radius:50%;background:#fff;box-shadow:0 2px 4px rgba(0,0,0,.25);transition:.2s}
-.sw input:checked+span{background:var(--gn)}.sw input:checked+span:after{transform:translateX(20px)}
+.sw input:checked+span{background:var(--ac)}.sw input:checked+span:after{transform:translateX(20px)}
 .btns{display:flex;gap:10px;margin-top:16px}
-.btn{flex:1;display:block;text-align:center;text-decoration:none;background:var(--ac);color:#fff;border-radius:14px;padding:14px;font-weight:700;font-size:16px}
-.btn.g{background:var(--acs);color:var(--ac)}
+.btn{flex:1;display:block;text-align:center;text-decoration:none;background:var(--ac);color:#fff;border-radius:14px;padding:15px;font-weight:600;font-size:16px}
+.btn.g{background:var(--card);color:var(--tx);border:1px solid var(--ln)}
 .btn[aria-disabled=true]{opacity:.45;pointer-events:none}
-/* detail screen */
-.scr{position:fixed;inset:0;z-index:35;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .3s cubic-bezier(.2,.8,.2,1);visibility:hidden}
+@media(prefers-color-scheme:dark){.btn{color:#00191e}}
+/* destination screen */
+.scr{position:fixed;inset:0;z-index:35;background:var(--bg);display:flex;flex-direction:column;transform:translateX(100%);transition:transform .32s cubic-bezier(.2,.8,.2,1);visibility:hidden}
 .scr.open{transform:none;visibility:visible}
-.dtop{display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 8px) 12px 8px;gap:8px}
-.back{display:flex;align-items:center;gap:2px;color:var(--ac);font-size:17px;font-weight:500;padding:8px 4px}
-.back svg{width:22px;height:22px}
-.dsc{flex:1;overflow:auto;padding:0 16px 24px;max-width:640px;width:100%;margin:auto}
-.hero{border-radius:22px;padding:20px;color:#fff;background:linear-gradient(140deg,hsl(var(--h) 80% 58%),hsl(calc(var(--h) + 40) 75% 42%));margin-bottom:14px;position:relative;overflow:hidden}
-.hero .fl{position:absolute;right:-6px;top:-10px;font-size:96px;opacity:.28}
-.hero h2{margin:0;font-size:30px;letter-spacing:-.8px}.hero p{margin:4px 0 0;opacity:.9;font-size:14.5px}
-.hero .from{margin-top:14px;font-size:14px;opacity:.9}.hero .from b{font-size:26px;letter-spacing:-.6px;opacity:1;margin-left:4px}
-.box{background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:16px;margin-bottom:12px}
-.box h3{margin:0 0 4px;font-size:18px;letter-spacing:-.3px}.box .bs{color:var(--mu);font-size:14px;margin-bottom:10px}
-.step{display:flex;gap:8px;margin-bottom:12px}
-.step div{flex:1;border:1.5px solid var(--ln);border-radius:12px;padding:8px 10px}
-.step div.on{border-color:var(--ac)}
-.step small{display:block;font-size:12px;color:var(--mu)}.step b{font-size:15px}
-.dow{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:12px;color:var(--mu);font-weight:600;padding:4px 0 6px;position:sticky;top:0;background:var(--card);z-index:1}
-.mo{font-weight:700;font-size:16px;margin:16px 4px 6px}
+.dtop{position:absolute;top:0;left:0;right:0;z-index:3;display:flex;align-items:center;justify-content:space-between;padding:calc(env(safe-area-inset-top) + 10px) 14px 10px;pointer-events:none}
+.dtop>*{pointer-events:auto}
+.dtop .ib{background:rgba(255,255,255,.9);border:0;color:#15171a;backdrop-filter:blur(8px)}
+.back svg{width:20px;height:20px}
+.dtitle{flex:1;text-align:center;font-weight:600;font-size:16.5px;opacity:0;transition:opacity .2s;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;padding:0 8px}
+.dtop{transition:background .2s,border-color .2s;border-bottom:1px solid transparent}
+.dtop.solid{background:var(--tab);backdrop-filter:saturate(1.6) blur(18px);-webkit-backdrop-filter:saturate(1.6) blur(18px);border-color:var(--ln)}
+.dtop.solid .dtitle{opacity:1}.dtop.solid .ib{background:transparent;color:var(--tx)}
+.dow{top:calc(env(safe-area-inset-top) + 60px)!important}
+.search input::-webkit-search-cancel-button{filter:grayscale(1);opacity:.45}
+.dbar .note{white-space:nowrap}
+.dsc{flex:1;overflow:auto;width:100%}
+.dhero{position:relative;height:min(46vh,380px);color:#fff;isolation:isolate;display:flex;align-items:flex-end}
+.dhero .ph{position:absolute;inset:0;z-index:-2}
+.dhero:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,rgba(0,0,0,.25) 0,rgba(0,0,0,0) 30%,rgba(0,0,0,.7) 100%)}
+.dhero .in{padding:0 20px 30px;max-width:680px;width:100%;margin:auto}
+.dhero h2{margin:0;font:400 52px/.95 var(--serif);letter-spacing:-.5px}
+.dhero p{margin:8px 0 0;font-size:14.5px;opacity:.92}
+.dhero .from{margin-top:12px;font-size:14.5px}.dhero .from b{font-size:24px;font-weight:700;letter-spacing:-.5px;margin-left:6px}
+.dbody{max-width:680px;margin:-16px auto 0;padding:0 16px 28px;position:relative}
+.box{background:var(--card);border:1px solid var(--ln);border-radius:20px;padding:18px 16px;margin-bottom:12px}
+.box h3{margin:0 0 4px;font:400 26px/1.15 var(--serif)}.box .bs{color:var(--mu);font-size:14px;margin-bottom:12px}
+.step{display:flex;gap:8px;margin-bottom:10px}
+.step div{flex:1;border:1px solid var(--ln);border-radius:14px;padding:9px 12px}
+.step div.on{border-color:var(--tx);box-shadow:inset 0 0 0 1px var(--tx)}
+.step small{display:block;font-size:12.5px;color:var(--mu)}.step b{font-size:15.5px;font-weight:600}
+.dow{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;font-size:12px;color:var(--mu);font-weight:600;padding:8px 0;position:sticky;top:0;background:var(--card);z-index:1;border-bottom:1px solid var(--ln)}
+.mo{font:400 22px/1.2 var(--serif);margin:18px 4px 6px}
 .mg{display:grid;grid-template-columns:repeat(7,1fr);row-gap:4px}
-.day{height:50px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;position:relative}
-.day .n{font-size:15px;font-weight:600}.day .p{font-size:10.5px;color:var(--mu);font-weight:600;height:13px}
+.day{height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;position:relative;text-align:center}
+.day .n{font-size:15.5px;font-weight:500}.day .p{font-size:11px;color:var(--mu);font-weight:600;height:14px}
 .day.c .p{color:var(--gn)}
-.day:disabled{opacity:.28}
+.day:disabled{opacity:.25}
 .day.in{background:var(--acs)}
-.day.dep,.day.ret{background:var(--ac);color:#fff;border-radius:12px}.day.dep .p,.day.ret .p{color:#fff}
-.day.dep.r1{border-radius:12px 0 0 12px}.day.ret.r1{border-radius:0 12px 12px 0}
-.day.sug:after{content:"";position:absolute;inset:3px;border:2px dashed var(--gn);border-radius:10px}
-.legend{display:flex;gap:14px;font-size:12px;color:var(--mu);margin-top:10px;flex-wrap:wrap}
-.legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:4px;vertical-align:-1px}
-.lnk{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-top:1px solid var(--ln);text-decoration:none;color:inherit;font-weight:600}
+.day.dep,.day.ret{background:var(--tx);color:var(--bg);border-radius:14px}.day.dep .p,.day.ret .p{color:var(--bg);opacity:.8}
+.day.dep.r1{border-radius:14px 0 0 14px}.day.ret.r1{border-radius:0 14px 14px 0}
+.day.sug:after{content:"";position:absolute;left:50%;bottom:3px;width:5px;height:5px;margin-left:-2.5px;border-radius:50%;background:var(--gn)}
+.legend{display:flex;gap:16px;font-size:12.5px;color:var(--mu);margin-top:12px;flex-wrap:wrap}
+.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:1px}
+.lnk{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-top:1px solid var(--ln);text-decoration:none;color:inherit;font-weight:600}
 .lnk:first-of-type{border-top:0}.lnk span:last-child{color:var(--mu);font-weight:500;font-size:14px}
-.ap{display:flex;justify-content:space-between;padding:10px 0;border-top:1px solid var(--ln);font-size:15px}.ap:first-of-type{border-top:0}
+.ap{display:flex;justify-content:space-between;padding:11px 0;border-top:1px solid var(--ln);font-size:15px}.ap:first-of-type{border-top:0}
 .ap small{color:var(--mu)}
-.dbar{background:var(--tab);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);border-top:1px solid var(--ln);padding:12px 16px calc(env(safe-area-inset-bottom) + 12px)}
-.dbar .in{max-width:608px;margin:auto}
+.dbar{background:var(--tab);backdrop-filter:saturate(1.6) blur(18px);-webkit-backdrop-filter:saturate(1.6) blur(18px);border-top:1px solid var(--ln);padding:12px 16px calc(env(safe-area-inset-bottom) + 12px)}
+.dbar .in{max-width:648px;margin:auto}
 .dbar .sum{display:flex;justify-content:space-between;align-items:flex-end;gap:10px;margin-bottom:10px}
-.dbar .big{font-size:26px;font-weight:800;letter-spacing:-.6px;line-height:1}
-.dbar .dts{font-size:13.5px;color:var(--mu);margin-top:4px}
-.dbar .note{font-size:13px;color:var(--mu);text-align:right;max-width:55%}
+.dbar .big{font-size:26px;font-weight:700;letter-spacing:-.6px;line-height:1}
+.dbar .dts{font-size:13.5px;color:var(--mu);margin-top:5px}
+.dbar .note{font-size:13px;color:var(--mu);text-align:right;max-width:52%}
 /* trips */
-.tc{display:grid;grid-template-columns:minmax(0,1fr);gap:14px;background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:16px;margin-bottom:14px}
+.tc{display:grid;grid-template-columns:minmax(0,1fr);gap:16px;background:var(--card);border:1px solid var(--ln);border-radius:20px;padding:18px 16px;margin-bottom:16px}
 .tc>*{min-width:0}.row .scroll{flex:none}
-.dtitle{flex:1;text-align:center;font-weight:700;font-size:17px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.stepper{display:flex;align-items:center;gap:14px}.stepper button{width:36px;height:36px;border-radius:50%;background:var(--acs);color:var(--ac);font-size:20px;font-weight:700}
-.tcard{background:var(--card);border-radius:20px;box-shadow:var(--sh);padding:18px;margin-bottom:14px}
-.tl{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--acs);color:var(--ac);margin-bottom:12px}
-.tl.g{background:var(--gns);color:var(--gn)}
-.tsum{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:14px}
-.tsum .big{font-size:30px;font-weight:800;letter-spacing:-.8px;line-height:1}.tsum small{color:var(--mu);font-size:13px}
-.route{position:relative;padding-left:22px;margin:4px 0 8px}
-.route:before{content:"";position:absolute;left:6px;top:10px;bottom:10px;width:2px;background:var(--ln)}
-.stop{position:relative;padding:4px 0}.stop:before{content:"";position:absolute;left:-21px;top:9px;width:12px;height:12px;border-radius:50%;background:var(--ac);border:2px solid var(--card)}
-.stop b{font-size:17px}.stop span{color:var(--mu);font-size:14px;margin-left:6px}
-.legx{font-size:13px;color:var(--mu);padding:2px 0 2px}
-details{border-top:1px solid var(--ln);margin-top:10px;padding-top:10px}
-summary{font-weight:600;color:var(--ac);list-style:none;cursor:pointer}summary::-webkit-details-marker{display:none}
-.br{display:flex;justify-content:space-between;gap:10px;font-size:14px;padding:6px 0}.br span:first-child{color:var(--mu)}
-.tip{font-size:14px;padding:5px 0 5px 18px;position:relative;line-height:1.45}.tip:before{content:"💡";position:absolute;left:-2px;font-size:12px;top:6px}
-.post{display:flex;gap:12px;align-items:flex-start;background:var(--card);border-radius:18px;box-shadow:var(--sh);padding:14px;text-decoration:none;color:inherit}
-.post .ic{width:40px;height:40px;border-radius:12px;display:grid;place-items:center;font-size:20px;flex:none;background:var(--acs)}
-.post b{font-size:15.5px;line-height:1.35;display:block}.post small{color:var(--mu);font-size:13px}
-.skel{height:84px;border-radius:18px;background:linear-gradient(90deg,var(--card),var(--ln),var(--card));background-size:200% 100%;animation:sk 1.2s infinite}
+.stepper{display:flex;align-items:center;gap:14px}.stepper button{width:36px;height:36px;border-radius:50%;border:1px solid var(--ln);font-size:19px;font-weight:600;text-align:center}
+.tcard{background:var(--card);border:1px solid var(--ln);border-radius:22px;padding:18px 18px 16px;margin-bottom:14px}
+.tl{font-size:13.5px;font-weight:600;color:var(--ac);margin-bottom:6px}
+.tl.g{color:var(--gn)}
+.tsum{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;margin-bottom:16px}
+.tsum .big{font:400 44px/1 var(--serif);letter-spacing:-.5px}.tsum small{color:var(--mu);font-size:13.5px}
+.route{position:relative;padding-left:24px;margin:4px 0 6px}
+.route:before{content:"";position:absolute;left:5px;top:12px;bottom:12px;width:1.5px;background:var(--ln)}
+.stop{position:relative;padding:3px 0}.stop:before{content:"";position:absolute;left:-24px;top:10px;width:11px;height:11px;border-radius:50%;background:var(--card);border:2px solid var(--tx)}
+.stop b{font:400 23px/1.2 var(--serif)}.stop span{color:var(--mu);font-size:14px;margin-left:8px}
+.legx{font-size:13.5px;color:var(--mu);padding:1px 0 3px}
+details{border-top:1px solid var(--ln);margin-top:12px;padding-top:12px}
+summary{font-weight:600;list-style:none;cursor:pointer;display:flex;justify-content:space-between}summary::-webkit-details-marker{display:none}
+summary:after{content:"+";color:var(--mu);font-size:20px;line-height:1}details[open] summary:after{content:"−"}
+.br{display:flex;justify-content:space-between;gap:10px;font-size:14.5px;padding:7px 0}.br span:first-child{color:var(--mu)}
+.tip{font-size:14.5px;padding:6px 0 6px 14px;position:relative;line-height:1.45;border-left:2px solid var(--ln);margin:6px 0}
+.post{display:block;padding:15px 16px;border-top:1px solid var(--ln);text-decoration:none;color:inherit}
+.post:first-child{border-top:0}
+.post .k{font-size:13px;font-weight:600;color:var(--ac)}.post .k.c{color:var(--gn)}
+.post b{font-size:16px;line-height:1.35;display:block;font-weight:600;margin:3px 0}.post small{color:var(--mu);font-size:13.5px}
+.skel{height:72px;border-top:1px solid var(--ln);background:linear-gradient(90deg,var(--card),var(--bg),var(--card));background-size:200% 100%;animation:sk 1.2s infinite}
 @keyframes sk{to{background-position:-200% 0}}
+/* search */
+.search{position:relative;margin:2px 0 14px}
+.search svg{position:absolute;left:15px;top:15px;width:19px;height:19px;color:var(--mu);pointer-events:none}
+.search input{width:100%;height:50px;border-radius:999px;border:1px solid var(--ln);background:var(--card);padding:0 16px 0 44px;font-size:16px;-webkit-appearance:none;appearance:none;outline:none}
+.search input:focus{border-color:var(--tx)}
+.sr{background:var(--card);border:1px solid var(--ln);border-radius:20px;margin:-6px 0 14px;overflow:hidden}
+.sr:empty{display:none}
+.sri{width:100%;display:flex;align-items:center;gap:12px;padding:11px 14px;border-top:1px solid var(--ln)}
+.sri:first-child{border-top:0}.sri .ph{width:40px;height:40px;border-radius:10px;flex:none}.sri b{font-weight:600}.sri small{display:block;color:var(--mu);font-size:13px}
+.sri .cd{margin-left:auto;color:var(--mu);font-weight:600;font-size:13.5px}
+.srh{padding:12px 14px 2px;font-size:13px;font-weight:600;color:var(--mu)}
+.srn{padding:13px 14px;color:var(--mu);font-size:14px;line-height:1.45}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid currentColor;border-right-color:transparent;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-2px;margin-right:7px}
+@keyframes sp{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style></head><body>
 <div id="hdr" class="hdr"></div>
 <main id="view"><div class="list"><div class="skel"></div><div class="skel"></div><div class="skel"></div></div></main>
@@ -166,7 +221,7 @@ const ago=i=>{const m=(Date.now()-new Date(i))/6e4;return m<2?'just now':m<60?Ma
 const med=a=>{const s=[...a].sort((x,y)=>x-y),n=s.length;return n?(n%2?s[(n-1)/2]:(s[n/2-1]+s[n/2])/2):0};
 const hm=m=>m?Math.floor(m/60)+'h '+String(m%60).padStart(2,'0')+'m':'';
 const urp=f=>Math.round(f*100/cfg.ur),mrp=f=>Math.round(f*100/cfg.mr);
-const K=n=>n>=1e4?(n/1e3).toFixed(n>=1e5?0:1).replace('.0','')+'K':n.toLocaleString();
+const K=n=>n>=1e3?(n/1e3).toFixed(n>=1e5?0:1).replace('.0','')+'K':String(n);
 const money=n=>'$'+Math.round(n).toLocaleString();
 const hue=n=>{let h=0;for(const c of n)h=(h*31+c.charCodeAt(0))%360;return h};
 const flag=cc=>cc&&cc.length===2?String.fromCodePoint(...[...cc.toUpperCase()].map(c=>127397+c.charCodeAt(0))):'';
@@ -177,6 +232,29 @@ const avLink=(o,c,dep,ret)=>`${AV}/search/${o}${dep.slice(8,10)}${dep.slice(5,7)
 const gLink=(o,name,dep,ret)=>'https://www.google.com/travel/flights?q='+encodeURIComponent(`Flights from ${o} to ${name} on ${dep}${ret?' through '+ret:' one way'}`);
 const months=()=>{const o=[],t=new Date();for(let i=0;i<12;i++){const d=new Date(t.getFullYear(),t.getMonth()+i,1);o.push([iso(d).slice(0,7),d.toLocaleDateString('en-US',{month:'short'})+(d.getMonth()===0||i===0?" '"+String(d.getFullYear()).slice(2):'')])}return o};
 
+/* ---------- photos (Wikipedia, free, no key) ---------- */
+let IMG=st.get('img3',{});const imgQ={};
+const regionName=cc=>{try{return new Intl.DisplayNames(['en'],{type:'region'}).of(cc)}catch(e){return ''}};
+const badImg=u=>!u||/\.svg|flag_of|coat_of_arms|locator|location_map|_map\.|seal_of|logo/i.test(u);
+async function wikiImg(t){
+  const r=await fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(t.replace(/ /g,'_')));
+  if(r.status===404)return {};if(!r.ok)throw new Error('net');
+  const j=await r.json();if(j.type==='disambiguation')return {};
+  const o=j.originalimage,th=j.thumbnail;if(!o||badImg(o.source))return {};
+  return {o:o.source,w:o.width,t:th&&/\/\d+px-/.test(th.source)?th.source.replace(/\/\d+px-/,'/{W}px-'):''};
+}
+function photo(name,cc){
+  if(IMG[name])return Promise.resolve(IMG[name]);if(imgQ[name])return imgQ[name];
+  return imgQ[name]=(async()=>{try{let r=await wikiImg(name);
+    if(!r.o&&cc){const rn=cc==='US'?'':regionName(cc);if(rn)r=await wikiImg(name+', '+rn)}
+    IMG[name]=r;st.set('img3',IMG);return r}catch(e){delete imgQ[name];return {}}})();
+}
+const imgURL=(r,px)=>{const W=px<=200?240:px<=400?480:960;return r.t&&(!r.w||r.w>W)?r.t.replace('{W}',W):r.o};
+const ph=(name,cc,cls='')=>`<div class="ph ${cls}" style="--h:${hue(name)}" data-ph="${esc(name)}|${esc(cc||'')}"></div>`;
+function hydrate(root=document){root.querySelectorAll('.ph[data-ph]:not(.has)').forEach(el=>{const [n,cc]=el.dataset.ph.split('|');
+  photo(n,cc).then(r=>{if(!r||!r.o)return;const u=imgURL(r,el.offsetWidth*(devicePixelRatio||2)),im=new Image();im.onload=()=>{el.style.backgroundImage=`url("${u}")`;el.classList.add('has')};im.src=u})})}
+const ccOf=d=>d.cc||(d.bucket==='domestic'?'US':'');
+
 /* ---------- data ---------- */
 function base(d){
   if(S.hub!=='cmh'||d.origin===D.origin)return d;
@@ -185,8 +263,8 @@ function base(d){
 }
 function entries(d){
   const o=[],m=(d.dates||'').match(/(\d{4}-\d\d-\d\d)(?: to (\d{4}-\d\d-\d\d))?/),dep=d.dep||(m&&m[1])||'',ret=d.ret||(m&&m[2])||'';
-  o.push({dep,ret,price:d.price,stops:d.stops,link:d.link,dur:d.dur});
-  for(const c of d.cal||[])o.push({dep:c[0],ret:c[1],price:c[2],stops:c[3],link:c[4]?AV+c[4]:''});
+  if(d.price!=null)o.push({dep,ret,price:d.price,stops:d.stops,link:d.link,dur:d.dur,o:d.origin,fare:d.fare});
+  for(const c of d.cal||[])o.push({dep:c[0],ret:c[1],price:c[2],stops:c[3],link:c[4]?(/^https?:/.test(c[4])?c[4]:AV+c[4]):'',o:c[5]||d.origin,fare:c[6]});
   return o.filter(e=>!e.dep||e.dep>=today);
 }
 const dateF=()=>S.from||S.to||S.l1||S.l2||S.wk||S.mo;
@@ -219,18 +297,25 @@ function cardHTML({d,e,ref}){
   const t=topTag(d,e,ref),f=Math.max(0,e.price-(d.extra||0));
   const when=e.dep?fd(e.dep)+(e.ret?' – '+fd(e.ret):''):'Flexible dates';
   const amt=cfg.pm?`${K(cfg.prog==='ur'?urp(f):mrp(f))}<small>${cfg.prog==='ur'?'UR':'MR'}</small>`:money(e.price);
-  return `<button class="card" data-k="${esc(d.key)}">${art(d)}<div class="info"><div class="city">${esc(d.name)}</div>
-<div class="meta">${when} · ${e.stops?e.stops+' stop':'Nonstop'}</div>${d.origin!==D.origin?`<div class="sub">✈︎ from ${d.origin} · ${hm(Math.round((AP[d.origin]||[0,0])[1]*60))} drive</div>`:''}${t?`<span class="tag ${t[1]}">${t[0]}</span>`:''}</div>
-<div class="price"><div class="amt">${amt}</div></div></button>`;
+  return `<button class="card" data-k="${esc(d.key)}">${ph(d.name,ccOf(d))}<div class="info"><div class="city">${esc(d.name)}</div>
+<div class="meta">${when}, ${e.stops?e.stops+' stop':'nonstop'}</div>${d.origin!==D.origin?`<div class="sub">Fly from ${apName(d.origin)}, ${hm(Math.round((AP[d.origin]||[0,0])[1]*60))} drive</div>`:''}${t?`<span class="tag ${t[1]}">${t[0]}</span>`:''}</div>
+<div class="price"><div class="amt${t&&!t[1]?' g':''}">${amt}</div></div></button>`;
+}
+function featHTML({d,e,ref},lead){
+  const t=topTag(d,e,ref),f=Math.max(0,e.price-(d.extra||0));
+  const amt=cfg.pm?`${K(cfg.prog==='ur'?urp(f):mrp(f))} ${cfg.prog==='ur'?'UR':'MR'}`:money(e.price);
+  return `<button class="feat" data-k="${esc(d.key)}">${ph(d.name,ccOf(d))}<div class="fc"><div><div class="fk">${t?t[0]:lead}</div><div class="fn">${esc(d.name)}</div>
+<div class="fm">${e.dep?fd(e.dep)+(e.ret?' – '+fd(e.ret):''):'Flexible dates'}, ${e.stops?e.stops+' stop':'nonstop'}${d.origin!==D.origin?', from '+d.origin:''}</div></div>
+<div class="fp"><b>${amt}</b><small>round trip</small></div></div></button>`;
 }
 /* ---------- screens ---------- */
-const HDR={flights:['Flights from Columbus'],trips:['Trip planner','Multi-city Europe trips priced from real fares'],deals:['Deals & error fares','Fire sales from deal sites and card offers'],saved:['Saved','Destinations you starred']};
+const HDR={flights:['From Columbus'],trips:['Trip planner','City-hopping trips in Europe, priced from real fares.'],deals:['Deals','Error fares, flash sales and card offers.'],saved:['Saved','Destinations you starred.']};
 function header(){
   const [t,s]=HDR[S.tab];
-  $('#hdr').innerHTML=`<div><h1>${t}</h1><p>${s||(D?'Updated '+ago(D.updated)+' · round trip, 1 adult':'Loading…')}</p></div><div class="hb">${S.tab==='flights'?'<button class="ib" data-act="refresh" aria-label="Refresh">↻</button>':''}<button class="ib" data-act="settings" aria-label="Settings">⚙︎</button></div>`;
+  $('#hdr').innerHTML=`<div><h1>${t}</h1><p>${s||(D?'Round-trip fares for one adult. Updated '+ago(D.updated)+'.':'Loading fares…')}</p></div><div class="hb">${S.tab==='flights'?'<button class="ib" data-act="refresh" aria-label="Refresh"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v5h-5"/></svg></button>':''}<button class="ib" data-act="settings" aria-label="Settings"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg></button></div>`;
   $$('#tabbar button').forEach(b=>b.classList.toggle('on',b.dataset.tab===S.tab));
 }
-function render(){header();if(!D)return;({flights,trips,deals,saved:savedV})[S.tab]()}
+function render(){header();if(!D)return;({flights,trips,deals,saved:savedV})[S.tab]();hydrate($('#view'))}
 function flights(){
   const pool=D.deals.filter(d=>d.bucket===S.b);
   const mx=Math.max(50,Math.ceil(Math.max(0,...pool.map(d=>d.price))/50)*50);if(S.bg==null||S.bg>mx)S.bg=mx;S.mx=mx;
@@ -243,18 +328,19 @@ function flights(){
   if(S.from||S.to)ch.push(['dates',(S.from?fd(S.from):'…')+' – '+(S.to?fd(S.to):'…')]);
   if(S.l1||S.l2)ch.push(['len',(S.l1||'1')+'–'+(S.l2||'21')+' nights']);
   if(S.bg<mx)ch.push(['bg','Under '+money(S.bg)]);if(S.hub==='cmh')ch.push(['hub','CMH only']);
-  $('#view').innerHTML=`<div class="seg"><button data-b="domestic" class="${S.b==='domestic'?'on':''}">Domestic</button><button data-b="international" class="${S.b==='international'?'on':''}">International</button></div>
-<div class="tools"><button class="fbtn${ch.length?' on':''}" data-act="filters">Filters${ch.length?' · '+ch.length:''}</button>
+  $('#view').innerHTML=`<div class="search"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="q" type="search" placeholder="Search any city or airport" autocomplete="off" autocorrect="off" enterkeyhint="search"></div><div class="sr" id="sr"></div>
+<div class="seg"><button data-b="domestic" class="${S.b==='domestic'?'on':''}">Domestic</button><button data-b="international" class="${S.b==='international'?'on':''}">International</button></div>
+<div class="tools"><button class="fbtn${ch.length?' on':''}" data-act="filters"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h10M18 6h2M4 12h4M12 12h8M4 18h12M20 18h0"/><circle cx="16" cy="6" r="2"/><circle cx="10" cy="12" r="2"/><circle cx="18" cy="18" r="2"/></svg>Filters${ch.length?' ('+ch.length+')':''}</button>
 <label class="sort">Sort <select id="sortSel"><option value="cheap"${S.sort==='cheap'?' selected':''}>Cheapest</option><option value="deal"${S.sort==='deal'?' selected':''}>Best deal</option><option value="soon"${S.sort==='soon'?' selected':''}>Soonest</option></select></label></div>
-${ch.length?`<div class="chips">${ch.map(([k,l])=>`<button class="chip" data-clear="${k}">${esc(l)} ✕</button>`).join('')}</div>`:''}
-<div class="list">${v.map(cardHTML).join('')||'<div class="empty"><b>Nothing matches</b>Try removing a filter or widening your dates.</div>'}</div>`;
+${ch.length?`<div class="chips">${ch.map(([k,l])=>`<button class="chip" data-clear="${k}" aria-label="Remove ${esc(l)}">${esc(l)} <span>✕</span></button>`).join('')}</div>`:''}
+${v.length?featHTML(v[0],{cheap:'Cheapest right now',deal:'Best deal right now',soon:'Leaving soonest'}[S.sort])+`<div class="list">${v.slice(1).map(cardHTML).join('')}</div>`:'<div class="empty"><b>Nothing matches</b>Remove a filter or widen your dates to see more fares.</div>'}`;
 }
 function savedV(){
   const v=D.deals.filter(d=>saved.has(d.key)).map(view).filter(Boolean).sort((a,b)=>a.e.price-b.e.price);
-  $('#view').innerHTML=`<div class="list">${v.map(cardHTML).join('')||'<div class="empty"><b>No saved destinations yet</b>Open any destination and tap ☆ to keep it here.</div>'}</div>`;
+  $('#view').innerHTML=`<div class="list">${v.map(cardHTML).join('')||'<div class="empty" style="background:var(--bg)"><b>Nothing saved yet</b>Open a destination and tap the star to keep it here.</div>'}</div>`;
 }
 function deals(){
-  $('#view').innerHTML=`<div class="list">${D.posts.map(p=>`<a class="post" href="${esc(p.link)}" target="_blank" rel="noopener"><div class="ic">${p.kind==='card'?'💳':'🔥'}</div><div><b>${esc(p.title)}</b><small>${p.kind==='card'?'Card offer':'Flight deal'} · ${esc(p.source)} · ${ago(p.seen_at)}</small></div></a>`).join('')||'<div class="empty"><b>No deals right now</b>Error fares and sales from Columbus and nearby airports show up here. This updates every 6 hours.</div>'}</div>`;
+  $('#view').innerHTML=D.posts.length?`<div class="list">${D.posts.map(p=>`<a class="post" href="${esc(p.link)}" target="_blank" rel="noopener"><div class="k${p.kind==='card'?' c':''}">${p.kind==='card'?'Card offer':'Flight deal'}</div><b>${esc(p.title)}</b><small>${esc(p.source.replace(/^www\./,''))}, ${ago(p.seen_at)}</small></a>`).join('')}</div>`:'<div class="empty"><b>No deals right now</b>Error fares and sales from Columbus and nearby airports appear here. The list updates every 6 hours.</div>';
 }
 /* ---------- filters & settings sheets ---------- */
 function openSheet(html){$('#sheet').innerHTML='<div class="grab"></div>'+html;$('#sheet').classList.add('open');$('#bd').classList.add('open')}
@@ -281,16 +367,19 @@ function settingsSheet(){
 <div class="sec"><h4>Point values (cents per point)</h4><div class="two"><div class="fld"><label>Chase UR</label><input id="sU" type="number" step="0.05" inputmode="decimal" value="${cfg.ur}"></div><div class="fld"><label>Amex MR</label><input id="sM" type="number" step="0.05" inputmode="decimal" value="${cfg.mr}"></div></div></div>
 <div class="sec"><h4>My balances (optional)</h4><div class="two"><div class="fld"><label>Chase UR</label><input id="sUb" type="number" inputmode="numeric" value="${cfg.urb||''}" placeholder="0"></div><div class="fld"><label>Amex MR</label><input id="sMb" type="number" inputmode="numeric" value="${cfg.mrb||''}" placeholder="0"></div></div>
 <div class="hint" style="margin-top:8px;color:var(--mu);font-size:13px">Stays on this phone only. Used to tell you when a fare is fully covered by points.</div></div>
+<div class="sec"><h4>Search helper</h4><div class="fld"><label>Cloudflare helper address</label><input id="sApi" type="url" inputmode="url" autocapitalize="off" autocorrect="off" placeholder="https://….workers.dev" value="${esc(API)}"></div>
+<div class="hint" style="margin-top:8px;color:var(--mu);font-size:13px">${API?'In-app prices for any city are on.':'Not set. Search still works, and opens live prices on Google Flights.'}</div></div>
 <div class="btns"><button class="btn" data-act="close">Done</button></div>`);
 }
 /* ---------- destination screen ---------- */
 let C=null;
 function openDetail(k,push=true){
-  const d=D.deals.find(x=>x.key===k);if(!d)return;
+  const d=typeof k==='object'?k:D.deals.find(x=>x.key===k);if(!d)return;k=d.key;
   const map={};for(const e of entries(d))if(e.dep&&(!map[e.dep]||e.price<map[e.dep].price))map[e.dep]=e;
-  const best=entries(d).filter(ok).sort((a,b)=>a.price-b.price)[0]||Object.values(map).sort((a,b)=>a.price-b.price)[0];
+  const norm=x=>x.ret&&dd(x.dep,x.ret)>=2&&dd(x.dep,x.ret)<=16;
+  const best=entries(d).filter(ok).filter(norm).sort((a,b)=>a.price-b.price)[0]||entries(d).filter(ok).sort((a,b)=>a.price-b.price)[0]||Object.values(map).sort((a,b)=>a.price-b.price)[0];
   C={d,map,dep:best?best.dep:'',ret:best?best.ret:''};
-  const ps=Object.values(map).map(e=>e.price),lo=Math.min(...ps),hi=Math.max(...ps);C.thr=lo+(hi-lo)*.25;C.lo=lo;
+  const ps=Object.values(map).map(e=>e.price),lo=ps.length?Math.min(...ps):null,hi=ps.length?Math.max(...ps):null;C.thr=ps.length?lo+(hi-lo)*.25:0;C.lo=lo;
   const keys=Object.keys(map).sort(),t=new Date(),last=keys.length?dt(keys[keys.length-1]):t;
   const nM=Math.max(6,(last.getFullYear()-t.getFullYear())*12+last.getMonth()-t.getMonth()+1);
   let g='';
@@ -301,19 +390,20 @@ function openDetail(k,push=true){
     g+='</div>'}
   const h=d.hist||[],sv=saved.has(d.key);
   const aps=(d.alts||[]).map(a=>`<div class="ap"><span>${apName(a.o)} <small>${a.o}${AP[a.o]&&AP[a.o][1]?' · '+AP[a.o][1]+'h drive':''}</small></span><span><b>${money(a.price)}</b>${a.price!==a.fare?` <small>(${money(a.fare)} fare)</small>`:''}</span></div>`).join('');
-  $('#det').innerHTML=`<div class="dtop"><button class="back" data-act="back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>Back</button><div class="dtitle">${esc(d.name)}</div>
-<button class="ib" data-act="star" aria-label="Save" style="color:${sv?'#f59e0b':'inherit'}">${sv?'★':'☆'}</button></div>
-<div class="dsc"><div class="hero" style="--h:${hue(d.name)}"><div class="fl">${flag(d.cc||(d.bucket==='domestic'?'US':''))||'✈︎'}</div><h2>${esc(d.name)}</h2><p>Round trip from ${apName(d.origin)} (${d.origin})${d.airline?' · '+esc(d.airline):''}${d.dur?' · '+hm(d.dur)+' flight':''}</p>
-<div class="from">Lowest saved fare<b>${money(lo)}</b></div></div>
-<div class="box"><h3>Pick your dates</h3><div class="bs">Tap any day to leave, then any day to return. Prices are the cheapest saved round trip leaving that day. Green means cheapest.</div>
+  $('#det').innerHTML=`<div class="dtop"><button class="ib back" data-act="back" aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg></button><div class="dtitle">${esc(d.name)}</div>
+${d.search?'<span style="width:40px"></span>':`<button class="ib" data-act="star" aria-label="Save" style="color:${sv?'#f59e0b':'inherit'}">${sv?'★':'☆'}</button>`}</div>
+<div class="dsc"><div class="dhero">${ph(d.name,ccOf(d))}<div class="in"><h2>${esc(d.name)}</h2><p>${d.search?`Searched from Columbus and 6 nearby airports${d.country?', '+esc(d.country):''}`:`Round trip from ${apName(d.origin)}${d.airline?', '+esc(d.airline):''}${d.dur?', '+hm(d.dur)+' flight':''}`}</p>
+<div class="from">${d.loading?'<span class="spin"></span>Finding the best prices…':lo!=null?`Lowest saved fare<b>${money(lo)}</b>${d.search&&d.best&&d.best.o!==D.origin?' from '+d.best.o:''}`:(d.err?esc(d.err):'No saved fares yet. Pick dates to check live prices.')}</div></div></div>
+<div class="dbody"><div class="box"><h3>Pick your dates</h3><div class="bs">Tap a day to leave, then a day to return. Each price is the cheapest saved round trip leaving that day.</div>
 <div class="step"><div id="sDep"><small>Leave</small><b>—</b></div><div id="sRet"><small>Return</small><b>—</b></div></div>
 <div class="dow"><span>S</span><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span></div>${g}
-<div class="legend"><span><i style="background:var(--gn)"></i>Cheapest days</span><span><i style="border:2px dashed var(--gn)"></i>Best known return</span></div></div>
-<div class="box"><h3>Check live prices</h3><div class="bs">Saved fares can be a few days old. Compare your exact dates:</div><div id="cmp"></div></div>
-${(d.alts||[]).length>1?`<div class="box"><h3>By airport</h3><div class="bs">Best saved fare from each airport, with drive cost included</div>${aps}</div>`:''}
-${h.length>1?`<div class="box"><h3>Price history</h3><div class="bs">${h.length} checks · low ${money(Math.min(...h))} · high ${money(Math.max(...h))}</div>${spark(h)}</div>`:''}
-</div><div class="dbar"><div class="in" id="dbar"></div></div>`;
-  paint();$('#det').classList.add('open');
+<div class="legend"><span><i style="background:var(--gn)"></i>Green price: cheapest days</span><span><i style="background:var(--gn)"></i>Dot under a date: best-known return</span></div></div>
+<div class="box"><h3>Compare live prices</h3><div class="bs">Saved fares can be a few days old. Check your exact dates on:</div><div id="cmp"></div></div>
+${(d.alts||[]).length>1?`<div class="box"><h3>By airport</h3><div class="bs">Best saved fare from each airport, including the drive.</div>${aps}</div>`:''}
+${h.length>1?`<div class="box"><h3>Price history</h3><div class="bs">Low ${money(Math.min(...h))}, high ${money(Math.max(...h))} over ${h.length} checks.</div>${spark(h)}</div>`:''}
+</div></div><div class="dbar"><div class="in" id="dbar"></div></div>`;
+  paint();hydrate($('#det'));$('#det').classList.add('open');
+  const sc=$('#det .dsc'),tb=$('#det .dtop');sc.onscroll=()=>tb.classList.toggle('solid',sc.scrollTop>Math.max(120,$('#det .dhero').offsetHeight-80));
   if(push)try{history.pushState({d:k},'','#'+encodeURIComponent(k))}catch(e){}
   setTimeout(()=>{const s=$(`#det [data-day="${C.dep}"]`);if(s)s.scrollIntoView({block:'center'})},80);
 }
@@ -323,16 +413,17 @@ function paint(){
   $$('#det .day').forEach(b=>{const k=b.dataset.day;b.classList.toggle('dep',k===dep);b.classList.toggle('ret',!!ret&&k===ret);b.classList.toggle('r1',!!ret);b.classList.toggle('in',!!ret&&k>dep&&k<ret);b.classList.toggle('sug',!!sug&&k===sug)});
   $('#sDep').classList.toggle('on',!dep||!!ret);$('#sRet').classList.toggle('on',!!dep&&!ret);
   $('#sDep b').textContent=dep?fdw(dep):'Pick a day';$('#sRet b').textContent=ret?fdw(ret):(dep?'Pick a day':'—');
-  const o=d.origin,c=(d.code||'').toUpperCase(),ex=d.extra||0;
+  const c=(d.code||'').toUpperCase(),eo=e&&e.o||d.origin,o=e&&(!ret||e.ret===ret)?eo:D.origin;
+  const fareE=x=>x.fare!=null?x.fare:Math.max(0,x.price-(d.extra||0));
   let sum,btn;
   if(!dep){sum=`<div><div class="big">Pick dates</div><div class="dts">Tap a departure day on the calendar</div></div>`;btn=`<span class="btn" aria-disabled="true">Check price</span>`}
   else if(!ret){
-    sum=e?`<div><div class="big">${money(e.price)}</div><div class="dts">Leave ${fdw(dep)}${e.ret?' · best return '+fdw(e.ret):''}</div></div><div class="note">Now pick a return day</div>`:`<div><div class="big">—</div><div class="dts">Leave ${fdw(dep)}</div></div><div class="note">Now pick a return day</div>`;
+    sum=e?`<div><div class="big">${money(e.price)}</div><div class="dts">Leave ${fdw(dep)}${e.ret?' · best return '+fdw(e.ret):''}${eo!==D.origin?' · from '+eo:''}</div></div><div class="note">Now pick a return day</div>`:`<div><div class="big">—</div><div class="dts">Leave ${fdw(dep)}</div></div><div class="note">Now pick a return day</div>`;
     btn=e&&e.ret?`<button class="btn" data-act="usebest">Use ${fd(dep)} – ${fd(e.ret)}</button>`:`<a class="btn g" href="${gLink(o,d.name,dep,'')}" target="_blank" rel="noopener">Check one-way prices</a>`}
   else{
     const exact=e&&e.ret===ret,n=dd(dep,ret);
-    if(exact){const f=Math.max(0,e.price-ex);
-      sum=`<div><div class="big">${money(e.price)}</div><div class="dts">${fd(dep)} – ${fd(ret)} · ${n} nights · ${e.stops?e.stops+' stop':'nonstop'}</div></div><div class="note">≈ ${K(urp(f))} UR · ${K(mrp(f))} MR${ex?'<br>incl. '+money(ex)+' drive':''}</div>`;
+    if(exact){const f=fareE(e),ex=e.price-f;
+      sum=`<div><div class="big">${money(e.price)}</div><div class="dts">${fd(dep)} – ${fd(ret)}, ${n} nights, ${e.stops?e.stops+' stop':'nonstop'}${eo!==D.origin?', from '+eo:''}</div></div><div class="note">${K(urp(f))} UR or ${K(mrp(f))} MR${ex?'<br>includes '+money(ex)+' drive':''}</div>`;
       btn=`<a class="btn" href="${esc(e.link||(c?avLink(o,c,dep,ret):gLink(o,d.name,dep,ret)))}" target="_blank" rel="noopener">Book this fare</a>`}
     else{sum=`<div><div class="big" style="font-size:20px">No saved fare</div><div class="dts">${fd(dep)} – ${fd(ret)} · ${n} nights${e?' · this day from '+money(e.price)+' (back '+fd(e.ret)+')':''}</div></div>`;
       btn=`<a class="btn" href="${gLink(o,d.name,dep,ret)}" target="_blank" rel="noopener">Check live price</a>`}
@@ -383,7 +474,7 @@ function plan(){
 }
 function tripCard([label,r,cls]){
   const f=Math.max(0,r.flight.price-(r.deal.extra||0)),first=r.s[0],last=r.s[r.s.length-1],mult=[.75,1,1.45][P.style];
-  let route='';r.s.forEach((c,i)=>{route+=`<div class="stop"><b>${esc(c.n)}</b><span>${r.nights[c.n]} night${r.nights[c.n]>1?'s':''}</span></div>`;if(i<r.legs.length){const l=r.legs[i];route+=`<div class="legx">${l.m==='train'?'🚆 Train or bus':'✈️ Short flight'} · ~${l.time.toFixed(1)}h · ~${money(l.cost)}</div>`}});
+  let route='';r.s.forEach((c,i)=>{route+=`<div class="stop"><b>${esc(c.n)}</b><span>${r.nights[c.n]} night${r.nights[c.n]>1?'s':''}</span></div>`;if(i<r.legs.length){const l=r.legs[i];route+=`<div class="legx">${l.m==='train'?'Train or bus':'Short flight'}, about ${l.time.toFixed(1)} h and ${money(l.cost)}</div>`}});
   const hi=[...r.s].sort((a,b)=>b.p-a.p)[0],lo=[...r.s].sort((a,b)=>a.p-b.p)[0],tips=[];
   if(hi!==lo&&hi.p-lo.p>=30)tips.push(`${hi.n} runs about ${money(hi.p*mult)}/day vs ${money(lo.p*mult)} in ${lo.n}. Shifting a night saves ~${money((hi.p-lo.p)*mult)}.`);
   if(r.legs.some(l=>l.m==='train'))tips.push('Book trains and buses 2+ weeks ahead and travel midweek for the lowest fares.');
@@ -391,9 +482,9 @@ function tripCard([label,r,cls]){
   tips.push(r.loop?`Loop route: you end back in ${first.n} and fly home from there.`:`Open-jaw: fly into ${first.n}, home from ${last.n}. Search it as a multi-city ticket (~$60 extra assumed).`);
   if(r.deal.origin!==D.origin)tips.push(`This fare leaves from ${apName(r.deal.origin)}, about ${AP[r.deal.origin][1]}h away. The drive cost is included.`);
   return `<div class="tcard"><span class="tl ${cls}">${label}</span>
-<div class="tsum"><div><small>Est. total per person</small><div class="big">${money(r.total)}</div><small>${fd(r.flight.dep)} – ${fd(r.flight.ret)} · ${r.n} nights</small></div><div style="text-align:right"><small>Flight</small><div style="font-weight:700;font-size:18px">${money(r.flight.price)}</div><small>from ${r.deal.origin}</small></div></div>
+<div class="tsum"><div><small>Est. total per person</small><div class="big">${money(r.total)}</div><small>${fd(r.flight.dep)} – ${fd(r.flight.ret)}, ${r.n} nights</small></div><div style="text-align:right"><small>Flight</small><div style="font-weight:700;font-size:18px">${money(r.flight.price)}</div><small>from ${r.deal.origin}</small></div></div>
 <div class="route">${route}</div>
-<details><summary>Cost breakdown & tips</summary>
+<details><summary>Costs and tips</summary>
 <div class="br"><span>Flight ${r.deal.origin} ⇄ ${esc(first.n)}</span><span>${money(r.flight.price)} (≈ ${K(urp(f))} UR)</span></div>
 <div class="br"><span>Getting between cities</span><span>~${money(r.inter-(r.loop?r.back.cost:60))}</span></div>
 <div class="br"><span>${r.loop?'Back to '+esc(first.n):'Open-jaw allowance'}</span><span>~${money(r.loop?r.back.cost:60)}</span></div>
@@ -406,10 +497,10 @@ function trips(){
   $('#view').innerHTML=`<div class="tc">
 <div class="row"><div class="lbl">Trip length</div><div class="stepper"><button data-act="pd-">−</button><b>${P.days} days</b><button data-act="pd+">+</button></div></div>
 <div class="row"><div class="lbl">Cities</div><div class="scroll">${[2,3,4].map(n=>`<button class="pill${P.k===n?' on':''}" data-pk="${n}">${n}</button>`).join('')}</div></div>
-<div><div class="lbl" style="margin-bottom:8px">Style</div><div class="scroll">${['Budget','Standard','Comfort'].map((l,i)=>`<button class="pill${P.style===i?' on':''}" data-ps="${i}">${l}</button>`).join('')}</div></div>
+<div><div class="lbl" style="margin-bottom:8px">Travel style</div><div class="scroll">${['Budget','Standard','Comfort'].map((l,i)=>`<button class="pill${P.style===i?' on':''}" data-ps="${i}">${l}</button>`).join('')}</div></div>
 <div><div class="lbl" style="margin-bottom:8px">Leave in</div><div class="scroll"><button class="pill${!P.mo?' on':''}" data-pm="">Any time</button>${ms.map(([v,l])=>`<button class="pill${P.mo===v?' on':''}" data-pm="${v}">${l}</button>`).join('')}</div></div></div>
 ${res.length?res.map(tripCard).join(''):`<div class="empty"><b>No ${P.days}-day Europe fares saved yet</b>Try another trip length or month. New fares arrive every 6 hours.</div>`}
-<p style="color:var(--mu);font-size:13px;line-height:1.5;padding:0 4px">The flight is a real saved fare. Train, bus, short-flight and daily costs are estimates, so use totals as a guide.</p>`;
+<p style="color:var(--mu);font-size:13.5px;line-height:1.5;padding:0 4px">The flight is a real saved fare. Train, bus, short-flight and daily costs are estimates, so treat totals as a guide.</p>`;
 }
 /* ---------- events ---------- */
 document.addEventListener('click',e=>{
@@ -439,9 +530,44 @@ document.addEventListener('change',e=>{const id=e.target.id,v=e.target.value,c=e
   if(id==='fWk')S.wk=c;else if(id==='fNd')S.nd=c;else if(id==='fHub'){S.hub=c?'all':'cmh';st.set('hub',S.hub)}
   else if(id==='fFrom')S.from=v;else if(id==='fTo')S.to=v;else if(id==='fL1')S.l1=v;else if(id==='fL2')S.l2=v;
   else if(id==='sPm'){cfg.pm=c;st.set('cfg2',cfg)}
+  else if(id==='sApi'){API=v.trim().replace(/\/+$/,'');st.set('api',API);return}
   else if(['sU','sM','sUb','sMb'].includes(id)){cfg.ur=+$('#sU').value||1.25;cfg.mr=+$('#sM').value||1;cfg.urb=+$('#sUb').value||0;cfg.mrb=+$('#sMb').value||0;st.set('cfg2',cfg)}
   else return;render();countN()});
 document.addEventListener('input',e=>{if(e.target.id==='fBg'){S.bg=+e.target.value;$('#bgL').textContent=S.bg>=S.mx?'No limit':'Up to '+money(S.bg);render();countN()}});
+/* ---------- search ---------- */
+let API=st.get('api',''),qT=0,qN=0,recents=st.get('recent',[]);
+fetch('config.json?'+Date.now()).then(r=>r.ok?r.json():{}).then(j=>{if(j&&j.api&&!st.get('api','')){API=String(j.api).replace(/\/+$/,'')}}).catch(()=>{});
+const sri=p=>`<button class="sri" data-place="${esc(JSON.stringify(p))}">${ph(p.city||p.name,p.cc)}<span><b>${esc(p.name)}</b><small>${esc(p.country||'')}</small></span><span class="cd">${esc(p.code)}</span></button>`;
+function showRecents(){const el=$('#sr');if(!el)return;el.innerHTML=recents.length?'<div class="srh">Recent searches</div>'+recents.map(sri).join(''):'';hydrate(el)}
+function onQuery(q){
+  const el=$('#sr');if(!el)return;q=q.trim();clearTimeout(qT);
+  if(q.length<2){showRecents();return}
+  const local=D?D.deals.filter(d=>d.name.toLowerCase().includes(q.toLowerCase())||(d.code||'').toLowerCase()===q.toLowerCase()).slice(0,4).map(d=>({code:d.code||'',name:d.name,cc:d.cc||'',country:'Saved fares · from '+money(d.price),key:d.key})):[];
+  if(!API){el.innerHTML=(local.map(sri).join('')||`<div class="srn">No saved fares match “${esc(q)}”.</div>`)+(/^[a-z]{3}$/i.test(q)?sri({code:q.toUpperCase(),name:'Airport or city code '+q.toUpperCase(),cc:'',country:'Check live prices'}):'')+'<div class="srn">Tip: finish the search-helper setup to search every city.</div>';return}
+  el.innerHTML=`<div class="srn"><span class="spin"></span>Searching…</div>`;
+  const n=++qN;
+  qT=setTimeout(()=>fetch(`${API}/places?q=${encodeURIComponent(q)}`).then(r=>r.json()).then(list=>{if(n!==qN)return;
+    const rows=(Array.isArray(list)?list:[]).map(sri).join('');el.innerHTML=rows||`<div class="srn">No places match “${esc(q)}”.</div>`;hydrate(el)})
+    .catch(()=>{if(n===qN)el.innerHTML=(local.map(sri).join(''))+'<div class="srn">Search helper didn’t respond. Check its address in ⚙ Settings.</div>'}),250);
+}
+function openPlace(p){
+  recents=[p,...recents.filter(r=>r.code!==p.code)].slice(0,6);st.set('recent',recents);
+  if(p.key){openDetail(p.key);return}
+  const key='search|'+p.code,stub={key,search:true,name:p.city||p.name,code:p.code,cc:p.cc,country:p.country,bucket:p.cc==='US'?'domestic':'international',origin:D.origin,extra:0,price:null,cal:[],alts:[],hist:[],loading:!!API};
+  openDetail(stub);
+  if(!API)return;
+  fetch(`${API}/search?dest=${encodeURIComponent(p.code)}`).then(r=>r.json()).then(j=>{
+    if(!C||C.d.key!==key)return;
+    if(j.error)throw new Error(j.error);
+    const b=j.best,full={...stub,loading:false,cal:j.cal||[],alts:j.alts||[],best:b};
+    if(b)Object.assign(full,{origin:b.o,price:b.price,fare:b.fare,dep:b.dep,ret:b.ret,link:b.link?(/^https?:/.test(b.link)?b.link:AV+b.link):'',stops:b.stops,extra:b.price-b.fare});
+    openDetail(full,false);
+  }).catch(err=>{if(C&&C.d.key===key)openDetail({...stub,loading:false,err:'Couldn’t load prices right now. Pick dates below to check live prices.'},false)});
+}
+document.addEventListener('input',e=>{if(e.target.id==='q')onQuery(e.target.value)});
+document.addEventListener('focusin',e=>{if(e.target.id==='q'&&!e.target.value)showRecents()});
+document.addEventListener('click',e=>{const b=e.target.closest('[data-place]');if(b){e.stopPropagation();const q=$('#q');if(q)q.blur();openPlace(JSON.parse(b.dataset.place))}},true);
+document.addEventListener('keydown',e=>{if(e.target.id==='q'&&e.key==='Enter'){const f=$('#sr .sri');if(f)f.click()}});
 function load(){header();
   fetch('deals.json?'+Date.now()).then(r=>r.json()).then(d=>{D=d;render();
     const h=decodeURIComponent((location.hash||'').slice(1)),dl=h&&D.deals.find(x=>x.key===h);if(dl){S.tab='flights';S.b=dl.bucket;render();openDetail(dl.key,false)}})
