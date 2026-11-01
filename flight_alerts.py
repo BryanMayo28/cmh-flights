@@ -39,7 +39,7 @@ MAX_PRICE = {
     "international": float(os.environ.get("MAX_PRICE_INTERNATIONAL", "500")),
 }
 # Nearby airports you'd drive to. Fares are compared as fare + estimated drive cost.
-ORIGINS = [o.strip().upper() for o in os.environ.get("ORIGINS", "CMH,CVG,CLE,DAY,DTW,PIT,IND").split(",") if o.strip()]
+ORIGINS = [o.strip().upper() for o in os.environ.get("ORIGINS", "CMH,CVG,CLE,DAY").split(",") if o.strip()]
 if ORIGIN not in ORIGINS:
     ORIGINS.insert(0, ORIGIN)
 DRIVE_HOURS = {"CMH": 0, "CVG": 1.75, "CLE": 2.25, "DAY": 1.2, "DTW": 3.25, "PIT": 3.0, "IND": 3.0}  # one way, from Columbus
@@ -60,7 +60,7 @@ TOPICS["deals"] = os.environ.get("NTFY_TOPIC_DEALS", NTFY_TOPIC)
 DEAL_FEEDS = [u.strip() for u in os.environ.get(
     "DEAL_FEEDS", "https://www.secretflying.com/feed/,https://www.theflightdeal.com/feed/,https://www.fly4free.com/feed/,https://www.reddit.com/r/traveldeals/new/.rss").split(",") if u.strip()]
 # Posts mentioning any of these count. Add airports you'd drive to, e.g. "Cleveland,Cincinnati,Detroit".
-DEAL_KEYWORDS = [k.strip() for k in os.environ.get("DEAL_KEYWORDS", "Columbus,CMH,Cleveland,Cincinnati,Dayton,Detroit,Pittsburgh,Indianapolis,Ohio").split(",") if k.strip()]
+DEAL_KEYWORDS = [k.strip() for k in os.environ.get("DEAL_KEYWORDS", "Columbus,CMH,Cleveland,Cincinnati,Dayton,Ohio").split(",") if k.strip()]
 # Separate these with | (they contain commas)
 DEAL_EXCLUDE = [k.strip().lower() for k in os.environ.get(
     "DEAL_EXCLUDE", "Columbus, GA|Columbus, Georgia|Columbus, MS|Columbus, IN").split("|") if k.strip()]
