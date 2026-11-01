@@ -1,5 +1,4 @@
 {
-  "deal|https://www.theflightdeal.com/2026/10/31/alaska-air-seattle-detroit-and-vice-versa-197-basic-economy-327-regular-economy-roundtrip-including-all-taxes/": 1,
   "deal|https://www.theflightdeal.com/2026/10/31/american-san-francisco-cleveland-ohio-and-vice-versa-256-basic-economy-386-regular-economy-roundtrip-including-all-taxes/": 1,
   "domestic|albany": 238,
   "domestic|anchorage": 758,
@@ -67,7 +66,7 @@
   "domestic|spokane": 511,
   "domestic|springfield": 439,
   "domestic|syracuse": 550,
-  "domestic|tampa": 354,
+  "domestic|tampa": 385,
   "domestic|tucson": 375,
   "domestic|tulsa": 373,
   "domestic|washington": 217,
@@ -95,7 +94,7 @@
   "international|istanbul": 606,
   "international|kigali": 1554,
   "international|kuwait city": 1061,
-  "international|london": 1003,
+  "international|london": 998,
   "international|manchester": 1095,
   "international|medellin": 857,
   "international|mexico city": 403,
