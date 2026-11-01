@@ -264,7 +264,7 @@ function base(d){
 function entries(d){
   const o=[],m=(d.dates||'').match(/(\d{4}-\d\d-\d\d)(?: to (\d{4}-\d\d-\d\d))?/),dep=d.dep||(m&&m[1])||'',ret=d.ret||(m&&m[2])||'';
   if(d.price!=null)o.push({dep,ret,price:d.price,stops:d.stops,link:d.link,dur:d.dur,o:d.origin,fare:d.fare});
-  for(const c of d.cal||[])o.push({dep:c[0],ret:c[1],price:c[2],stops:c[3],link:c[4]?(/^https?:/.test(c[4])?c[4]:AV+c[4]):'',o:c[5]||d.origin,fare:c[6]});
+  for(const c of d.cal||[])if(c[1])o.push({dep:c[0],ret:c[1],price:c[2],stops:c[3],link:c[4]?(/^https?:/.test(c[4])?c[4]:AV+c[4]):'',o:c[5]||d.origin,fare:c[6]});
   return o.filter(e=>!e.dep||e.dep>=today);
 }
 const dateF=()=>S.from||S.to||S.l1||S.l2||S.wk||S.mo;
@@ -559,7 +559,9 @@ function openPlace(p){
   fetch(`${API}/search?dest=${encodeURIComponent(p.code)}`).then(r=>r.json()).then(j=>{
     if(!C||C.d.key!==key)return;
     if(j.error)throw new Error(j.error);
-    const b=j.best,full={...stub,loading:false,cal:j.cal||[],alts:j.alts||[],best:b};
+    const cal=(j.cal||[]).filter(c=>c[1]),by={};
+    for(const c of cal){const a={o:c[5],price:c[2],fare:c[6],dep:c[0],ret:c[1],link:c[4],stops:c[3]};if(!by[a.o]||a.price<by[a.o].price)by[a.o]=a}
+    const alts=Object.values(by).sort((x,y)=>x.price-y.price),b=alts[0]&&{...alts[0]},full={...stub,loading:false,cal,alts,best:b};
     if(b)Object.assign(full,{origin:b.o,price:b.price,fare:b.fare,dep:b.dep,ret:b.ret,link:b.link?(/^https?:/.test(b.link)?b.link:AV+b.link):'',stops:b.stops,extra:b.price-b.fare});
     openDetail(full,false);
   }).catch(err=>{if(C&&C.d.key===key)openDetail({...stub,loading:false,err:'Couldn’t load prices right now. Pick dates below to check live prices.'},false)});
